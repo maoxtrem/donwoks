@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello InventarioController!{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center fw-bold text-primary">Ingresar inventario</h2>
+  <table class="table table-sm" id="table" data-toggle="table" data-fixed-scroll="true" data-show-footer="true"
+    data-url="{{path('app_get_inventario')}}" data-height="500" data-buttons="buttons"
+    data-show-refresh = "true">
+    <thead>
+      <tr>
+        <th data-align="center" data-field="id" data-visible="false">id</th>
+        <th data-align="center" data-field="fecha" data-formatter="fecha">Ultima modificacion</th>
+        <th data-align="center" data-field="nombre" >Nombre</th>
+        <th data-align="center" data-field="medida">Medida</th>
+        <th data-align="center" data-field="cantidad">Cantidad</th>
+        <th data-align="center" data-field="costo" data-footer-formatter="suma">costo</th>
+        <th data-align="center" data-field="minimo" data-formatter="nivel">nivel</th>
+        <th data-align="center" data-field="new_cantidad">Cantidad-></th>
+        <th data-align="center" data-align="center" data-formatter="operateFormatter" data-events="operateEvents">
+          inventario final</th>
+        <th data-align="center" data-field="add_cantidad">Cantidad-></th>
+        <th data-align="center" data-formatter="operateFormatterAdd" data-events="operateEvents">agregar producto</th>
+      </tr>
+    </thead>
+  </table>
+
+</div>
+<script>
+  const $table = $('#table');
+  function fecha(value, row) {
+    return formato_fecha(row.fecha);
+  }
+  function suma(data) {
+    return '$' + data.map(row => +row[this.field]).reduce((sum, i) => sum + i, 0).toLocaleString('es-ES')
+  }
+
+  function formato_fecha(fecha) {
+    const date = new Date(fecha.date + 'Z');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Los meses son de 0 a 11
+    const year = date.getUTCFullYear();
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+    // Formatear la fecha como dd-MM-yyyy HH:mm:ss
+    return `${day}-${month}-${year}`;
+  }
+
+
+  function nivel(value, row, index) {
+    const progress = row.minimo;
+    let color = 'success';
+    if (progress <= 25) {
+      color = 'danger';
+    } else if (progress <= 50) {
+      color = 'warning';
+    } else if (progress <= 75) {
+      color = 'primary';
+    }
+    return `<div class="progress" role="progressbar" aria-label="nivel" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">
+  <div class="progress-bar bg-${color}" id="progress-bar" style="width: ${progress}%"></div>
+</div>`;
+
+  }
+
+  function operateFormatter(value, row, index) {
+    return [
+      '<input class="new_cantidad form-control form-control-sm" type="number">'
+    ].join('')
+  }
+  function operateFormatterAdd(value, row, index) {
+    return [
+      '<input class="new_cantidad_add form-control form-control-sm" type="number">'
+    ].join('')
+  }
+
+  window.operateEvents = {
+    'change .new_cantidad': function (e, value, row, index) {
+      $table.bootstrapTable('updateCell', {
+        index: index,
+        field: 'new_cantidad',
+        value: e.target.value
+      })
+      $table.bootstrapTable('updateCell', {
+        index: index,
+        field: 'add_cantidad',
+        value: 0
+      })
+    }, 'change .new_cantidad_add': function (e, value, row, index) {
+      $table.bootstrapTable('updateCell', {
+        index: index,
+        field: 'add_cantidad',
+        value: e.target.value
+      })
+      $table.bootstrapTable('updateCell', {
+        index: index,
+        field: 'new_cantidad',
+        value: 0
+      })
+    }
+  }
+
+  function buttons() {
+    return {
+      btnEnviarInventario: {
+        html: ' <button name="btnEnviarInventario" class="btn btn-success">enviar</button>',
+        event: async () => {
+          try {
+            const data = $table.bootstrapTable('getData');
+            if (!data.length) {
+              return false
+            }
+            const formData = new FormData();
+            formData.append('datos', JSON.stringify(data));
+            const respuesta = await fetch("{{path('app_enviar_inventario')}}", {
+              method: 'POST',
+              body: formData,
+            });
+            const datos = await respuesta.json();
+            $table.bootstrapTable('refresh');
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+      },
+      btnVerPedidos: {
+        html: '<a href="{{path('app_pedidos')}}" class="btn btn-danger">ver pedidos</a>'
+      },
+      btnHacerPedido: {
+        html: '<a href="{{path('app_pedido')}}" class="btn btn-danger">hacer pedido</a>'
+      },
+      btnGastos: {
+        html: '<a href="{{path('app_gasto')}}" class="btn btn-danger">Caja</a>'
+      },
+      btnInventario: {
+        html: '<a class="btn btn-warning">inventario</a>'
+      },
+      btnInforme: {
+        html: '<a href="{{path('app_informes')}}" class="btn btn-danger">informe</a>'
+      },
+    }
+  }
+</script>
+{% endblock %}

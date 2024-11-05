@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gastos
+{% endblock %}
+
+{% block body %}
+	<div class="container mt-5">
+		<h2 class="mb-4 text-center fw-bold text-primary">Ingresar una transaccion</h2>
+		<form id="form_gasto" class="px-3 py-3 border rounded shadow-sm">
+				<div class="row mb-2">
+					<div class="col-md-6">
+						<label for="concepto" class="form-label fw-bold ">Concepto</label>
+						<input type="text" class="form-control rounded" name="concepto" placeholder="Ingresa el concepto" required>
+					</div>
+					<div class="col-md-6">
+						<label for="valor" class="form-label fw-bold ">Valor</label>
+						<input type="number" class="form-control rounded" name="valor" placeholder="Ingresa el valor" required>
+
+					</div>
+				</div>
+				<div class="row">
+					<label class="mb-2 fw-bold ">Tipo de movimiento</label>
+					<div class="col-auto">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="tipo_movimiento" id="gasto" value="gasto" checked>
+							<label class="form-check-label" for="gasto">Gasto</label>
+						</div>
+					</div>
+					<div class="col-auto">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="tipo_movimiento" id="inversion" value="inversion">
+							<label class="form-check-label" for="inversion">Inversión</label>
+						</div>
+					</div>
+					<div class="col-auto">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="tipo_movimiento" id="credito" value="credito">
+							<label class="form-check-label" for="credito">Credito</label>
+						</div>
+					</div>
+					<div class="col-auto">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="tipo_movimiento" id="prestamo" value="prestamo">
+							<label class="form-check-label" for="prestamo">Prestamo</label>
+						</div>
+					</div>
+										<div class="col-auto">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="tipo_movimiento" id="deuda" value="deuda">
+							<label class="form-check-label" for="deuda">Deuda</label>
+						</div>
+					</div>
+					<div class="col-auto">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="tipo_movimiento" id="cierre_mes" value="cierre_mes">
+							<label class="form-check-label" for="cierre_mes">Cierre mes</label>
+						</div>
+					</div>
+				</div>
+			<button type="submit" class="btn btn-primary btn-block rounded-pill mt-3">Enviar</button>
+		</form>
+		<table class="table table-sm " id="table" data-toggle="table" data-show-footer="true" data-url="{{path('app_get_gasto')}}?movimiento=inversion" data-buttons="buttons">
+			<thead>
+				<tr>
+					<th colspan="4" class="text-center bg-dark text-white">Inversion</th>
+				</tr>
+				<tr>
+					<th data-align="center" data-field="id">id</th>
+					<th data-field="fecha" data-footer-formatter="total" data-formatter="fecha">hora</th>
+					<th data-field="detalle">Detalle</th>
+					<th data-field="precio" data-footer-formatter="suma">Valor</th>
+				</tr>
+			</thead>
+		</table>
+		<table class="table table-sm " id="table_gastos" data-toggle="table" data-show-footer="true" data-url="{{path('app_get_gasto')}}?movimiento=gasto">
+			<thead>
+				<tr>
+					<th colspan="4" class="text-center bg-dark text-white">Gastos</th>
+				</tr>
+				<tr>
+					<th data-align="center" data-field="id">id</th>
+					<th data-field="fecha" data-footer-formatter="total" data-formatter="fecha">hora</th>
+					<th data-field="detalle">Detalle</th>
+					<th data-field="precio" data-footer-formatter="suma">Valor</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<script>
+		const $table = $('#table');
+const form_gasto = document.querySelector('#form_gasto')
+form_gasto.addEventListener('submit', async (e) => {
+e.preventDefault();
+try {
+const formData = new FormData(e.target);
+const respuesta = await fetch("{{ path('app_gasto_enviar') }}", {
+method: 'POST',
+body: formData
+});
+const datos = await respuesta.json();
+$table.bootstrapTable('refresh');
+form_gasto.reset();
+} catch (error) {
+console.error('Error:', error);
+}
+})
+
+function total() {
+return "TOTAL"
+}
+function suma(data) {
+return '$' + data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0)
+}
+
+function fecha(value, row) {
+return formato_fecha(row.fecha);
+}
+
+function formato_fecha(fecha) {
+const date = new Date(fecha.date + 'Z');
+const day = String(date.getUTCDate()).padStart(2, '0');
+const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Los meses son de 0 a 11
+const year = date.getUTCFullYear();
+const hours = String(date.getUTCHours()).padStart(2, '0');
+const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+// Formatear la fecha como dd-MM-yyyy HH:mm:ss
+return `${hours}:${minutes}:${seconds}`;
+}
+
+function buttons() {
+return {
+btnVerPedidos: {
+html: '<a href="     {{ path('app_pedidos') }}" class="btn btn-danger">ver pedidos</a>'
+},
+btnHacerPedido: {
+html: '<a href="     {{ path('app_pedido') }}" class="btn btn-danger">hacer pedido</a>'
+},
+btnGastos: {
+html: '<a class="btn btn-warning">Caja</a>'
+},
+btnInventario: {
+html: '<a href="     {{ path('app_inventario') }}" class="btn btn-danger">inventario</a>'
+},
+btnInforme: {
+html: '<a href="     {{ path('app_informes') }}" class="btn btn-danger">informe</a>'
+}
+}
+}
+	</script>
+{% endblock %}
