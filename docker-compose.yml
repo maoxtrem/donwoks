@@ -1,0 +1,35 @@
+services: 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ../..:/workspaces:cached
+    command: sleep infinity
+    networks:
+      - app-network
+    ports:
+      - "80:80"
+
+  db:
+    image: mariadb:10.4
+    restart: unless-stopped
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mariadb
+      MYSQL_DATABASE: mariadb
+      MYSQL_USER: mariadb
+      MYSQL_PASSWORD: mariadb
+    networks:
+      - app-network
+    ports:
+      - "3306:3306"
+
+volumes:
+  mariadb-data:
+
+networks:
+  app-network:
+    driver: bridge
+
