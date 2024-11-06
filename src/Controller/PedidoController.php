@@ -92,10 +92,24 @@ class PedidoController extends AbstractController
     #[Route('/procesar_pedido', name: 'app_procesar_pedido')]
     public function app_procesar_pedido(
         PedidoRepository $pedidoRepository,
+        ClienteRepository $clienteRepository,
         Request $request
     ): JsonResponse {
         $id = $request->getPayload()->getInt('id');
         $pedido = $pedidoRepository->find($id);
+        if ($pedido->getPuntosRecibidos() === 0) {
+            $cliente = $request->getPayload()->get('cliente');
+            if ($cliente) {
+                $cliente = $clienteRepository->findOneBy(['codigo' => $cliente]);
+                if ($cliente instanceof Cliente) {
+                    $puntos = $pedido->getUtilidad() * 0.1;
+                    $cliente->sumarPuntos($puntos);
+                    $pedido->setPuntosRecibidos($puntos);
+                    $pedido->setCliente($cliente->getCodigo());
+                }
+            }
+        }
+
         $pedido->nextEstado();
         $pedidoRepository->guardar($pedido);
         return new JsonResponse([], 200, ['Content-Type' => 'application/json']);

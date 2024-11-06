@@ -37,6 +37,7 @@ class PedidoRepository extends ServiceEntityRepository
                 'p.fechaupdate fecha_final',
                 'p.metodoPago metodo_pago',
                 'p.lugar lugar',
+                'p.cliente cliente',
                 'p.puntosRecibidos puntos_recibidos',
                 'p.puntosRedimidos puntos_redimidos',
                 'p.estado estado',
