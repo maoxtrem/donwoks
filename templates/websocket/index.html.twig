@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello WebsocketController!{% endblock %}
+
+{% block body %}
+<div class="container">
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title" id="title-card">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+  <button type="button" id="test" class="btn">Base class</button>
+  </div>
+</div>
+</div>
+
+<script>
+const title = document.querySelector('#title-card');
+
+
+const socket = new WebSocket('ws://127.0.0.1:8000');
+
+socket.onopen = function() {
+  console.log('Conexión establecida');
+};
+
+socket.onmessage = function(event) {
+  console.log(event.data);
+};
+
+socket.onerror = function(error) {
+  console.log('Error:', error);
+};
+
+socket.onclose = function() {
+  console.log('Conexión cerrada');
+};
+</script>
+{% endblock %}

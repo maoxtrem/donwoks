@@ -4,155 +4,176 @@
 {% endblock %}
 
 {% block body %}
-<div class="container pb-5">
-	<div class="d-grid gap-3 mt-3">
-		<table class="table table-sm" id="table" data-toggle="table" data-fixed-scroll="true" data-show-footer="true"
-			data-url="{{path('app_get_pedidos')}}" data-height="540" data-detail-view="true" data-show-refresh="true"
-			data-detail-formatter="detailFormatter" data-buttons="buttons"
-			>
-			<thead>
-				<tr>
-					<th data-align="center" data-field="id">id</th>
-					<th data-align="center" data-field="fecha" data-footer-formatter="total" data-formatter="fecha">hora
-						ini</th>
-					<th data-align="center" data-field="fecha_final" data-formatter="fecha_final">hora fin</th>
-					<th data-field="observacion">Observacion</th>
-					<th data-field="lugar">Lugar</th>
-					<th data-field="price" data-footer-formatter="suma">Precio</th>
-					<th data-field="utilidad" data-footer-formatter="suma">Utilidad</th>
-					<th data-field="puntos_recibidos" data-footer-formatter="sumar">Pts Recib</th>
-					<th data-align="center" data-field="estado" data-formatter="estado">Estado</th>
-					<th data-field="cliente" data-formatter="cliente" data-width="120" data-events="operateEventsPedidos">cliente</th>
-					<th data-align="center" data-field="operate" data-formatter="operateFormatter"
-						data-events="operateEventsPedidos">
-						accion</th>
-				</tr>
-			</thead>
-		</table>
+	<div class="container pb-5">
+		<div class="d-grid gap-3 mt-3">
+			<table class="table table-sm" id="table" data-toggle="table" data-fixed-scroll="true" data-show-footer="true" data-url="{{path('app_get_pedidos')}}" data-height="540" data-detail-view="true" data-show-refresh="true" data-detail-formatter="detailFormatter" data-buttons="buttons">
+				<thead>
+					<tr>
+						<th data-align="center" data-field="id">id</th>
+						<th data-align="center" data-field="fecha" data-footer-formatter="total" data-formatter="fecha">hora
+																				ini</th>
+						<th data-align="center" data-field="fecha_final" data-formatter="fecha_final">hora fin</th>
+						<th data-field="observacion">Observacion</th>
+						<th data-field="lugar">Lugar</th>
+						<th data-field="price" data-footer-formatter="suma">Precio</th>
+						<th data-field="utilidad" data-footer-formatter="suma">Utilidad</th>
+						<th data-field="puntos_recibidos" data-footer-formatter="sumar">Pts Recib</th>
+						<th data-align="center" data-field="estado" data-formatter="estado">Estado</th>
+						<th data-field="cliente" data-formatter="cliente" data-width="120" data-events="operateEventsPedidos">cliente</th>
+						<th data-align="center" data-field="operate" data-formatter="operateFormatter" data-events="operateEventsPedidos">
+							accion</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
 	</div>
-</div>
-<script>
-	const $table = $('#table');
+	<script>
+		const $table = $('#table');
 
-	function insert(row) {
-		let ids = $table.bootstrapTable('getData');
-		row.id = !ids.length ? 1 : Math.max.apply(Math, ids.map(o => o.id)) + 1;
-		$table.bootstrapTable('insertRow', {
-			index: 1,
-			row: row
-		})
-	}
+function insert(row) {
+let ids = $table.bootstrapTable('getData');
+row.id = ! ids.length ? 1 : Math.max.apply(Math, ids.map(o => o.id)) + 1;
+$table.bootstrapTable('insertRow', {
+index: 1,
+row: row
+})
+}
 
-	function fecha(value, row) {
-		return formato_fecha(row.fecha);
-	}
-	function fecha_final(value, row) {
-		return formato_fecha(row.fecha_final);
-	}
+function fecha(value, row) {
+return formato_fecha(row.fecha);
+}
+function fecha_final(value, row) {
+return formato_fecha(row.fecha_final);
+}
 
-	function formato_fecha(fecha) {
-		const date = new Date(fecha.date + 'Z');
-		const day = String(date.getUTCDate()).padStart(2, '0');
-		const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Los meses son de 0 a 11
-		const year = date.getUTCFullYear();
-		const hours = String(date.getUTCHours()).padStart(2, '0');
-		const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-		const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+function formato_fecha(fecha) {
+const date = new Date(fecha.date + 'Z');
+const day = String(date.getUTCDate()).padStart(2, '0');
+const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Los meses son de 0 a 11
+const year = date.getUTCFullYear();
+const hours = String(date.getUTCHours()).padStart(2, '0');
+const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+const seconds = String(date.getUTCSeconds()).padStart(2, '0');
 
-		// Formatear la fecha como dd-MM-yyyy HH:mm:ss
-		return `${hours}:${minutes}:${seconds}`;
-	}
+// Formatear la fecha como dd-MM-yyyy HH:mm:ss
+return `${hours}:${minutes}:${seconds}`;
+}
 function cliente(value, row) {
-  const input = `<input class='add_cliente form-control form-control-sm' type='number'>`;
-  
-  return !value? (row.estado < 3 ? input : '') : value;
-}
-	function estado(value, row) {
-		const estado = ['pendiente', 'procesando', 'terminado', 'entregado'];
-		const color = ['primary', 'warning', 'success','secundary'];
-		return `<span class="text-${color[row.estado]}">${estado[row.estado]}</span>`;
-	}
-	async function detailFormatter(value, row, index, test) {
-		const formData = new FormData();
-		formData.append('id', row.id);
-		const respuesta = await fetch("{{ path('app_get_pedidos_detalles') }}", {
-			method: 'POST',
-			body: formData
-		});
-		const datos = await respuesta.json();
-		let html = ['<ul class="list-group">'];
-		for (const dato of datos.rows) {
-			html.push(`<li class="list-group-item">- ${dato.name
-				}</li>`);
-		}
-		html.push('</ul>');
-		index[0].innerHTML = html.join('');
+const input = `<input class='add_cliente form-control form-control-sm' type='number'>`;
 
-		return;
-	}
-	function total() {
-		return "TOTAL"
-	}
-	function sumar(data) {
-		return 'Pts:' + data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0)
-	}
-	function suma(data) {
-		return '$' + data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0)
-	}
-	function operateFormatter(value, row, index) {
-		let botones = [];
-		const estado = ['procesar', 'terminar', 'entregar'];
-		const color = ['primary', 'warning', 'success'];
-		row.estado < 3 && botones.push(`<a class="procesar btn btn-${color[row.estado]} btn-sm m-2" href="javascript:void(0)">${estado[row.estado]
-			}</a>`);
-		row.estado < 3 && botones.push(`<a class="cancelar btn btn-danger btn-sm m-2" href="javascript:void(0)"><i class="bi bi-trash"></i></a>`);
-		return botones.join('')
-	}
-	window.operateEventsPedidos = {
-		'click .procesar': async function (e, value, row, index) {
-			const formData = new FormData();
-			formData.append('id', row.id);
-				row.cliente&&formData.append('cliente', row.cliente);
-			console.log( row);
-			const respuesta = await fetch("{{ path('app_procesar_pedido') }}", {
-				method: 'POST',
-				body: formData
-			});
-			const datos = await respuesta.json();
-			$table.bootstrapTable('refresh')
-		},
-		'change .add_cliente': function (e, value, row, index) {
-		row.cliente=e.target.value;
-		},
-		'click .cancelar': async function (e, value, row, index) {
-			const formData = new FormData();
-			formData.append('id', row.id);
-			const respuesta = await fetch("{{ path('app_cancelar_pedido') }}", {
-				method: 'POST',
-				body: formData
-			});
-			const datos = await respuesta.json();
-			$table.bootstrapTable('refresh')
-		}
-	}
-	function buttons() {
-		return {
-			btnVerPedidos: {
-				html: '<a  class="btn btn-warning">ver pedidos</a>'
-			},
-			btnHacerPedido: {
-				html: '<a href=" {{ path('app_pedido') }}" class="btn btn-danger">hacer pedido</a>'
-},
-			btnGastos: {
-				html: '<a href=" {{ path('app_gasto') }}" class="btn btn-danger">Caja</a>'
-},
-			btnInventario: {
-				html: '<a href=" {{ path('app_inventario') }}" class="btn btn-danger">inventario</a>'
-},
-			btnInforme: {
-				html: '<a href=" {{ path('app_informes') }}" class="btn btn-danger">informe</a>'
+return ! value ? (row.estado < 3 ? input : '') : value;
 }
-		}
-	}
-</script>
+function estado(value, row) {
+const estado = ['pendiente', 'procesando', 'terminado', 'entregado'];
+const color = ['primary', 'warning', 'success', 'secundary'];
+return `<span class="text-${
+color[row.estado]
+}">${
+estado[row.estado]
+}</span>`;
+}
+async function detailFormatter(value, row, index, test) {
+const formData = new FormData();
+formData.append('id', row.id);
+const respuesta = await fetch("{{ path('app_get_pedidos_detalles') }}", {
+method: 'POST',
+body: formData
+});
+const datos = await respuesta.json();
+let html = ['<ul class="list-group">'];
+for (const dato of datos.rows) {
+html.push (`<li class="list-group-item">- ${
+dato.name
+}</li>`);
+}
+html.push('</ul>');
+index[0].innerHTML = html.join('');
+
+return;
+}
+function total() {
+return "TOTAL"
+}
+function sumar(data) {
+return 'Pts:' + data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0)
+}
+function suma(data) {
+return '$' + data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0)
+}
+function operateFormatter(value, row, index) {
+let botones = [];
+const estado = ['procesar', 'terminar', 'entregar'];
+const color = ['primary', 'warning', 'success'];
+row.estado < 3 && botones.push(`<a class="procesar btn btn-${
+color[row.estado]
+} btn-sm m-2" href="javascript:void(0)">${
+estado[row.estado]
+}</a>`);
+row.estado < 3 && botones.push(`<a class="cancelar btn btn-danger btn-sm m-2" href="javascript:void(0)"><i class="bi bi-trash"></i></a>`);
+return botones.join('')
+}
+window.operateEventsPedidos = {
+'click .procesar': async function (e, value, row, index) {
+const formData = new FormData();
+formData.append('id', row.id);
+row.cliente && formData.append('cliente', row.cliente);
+console.log(row);
+const respuesta = await fetch("{{ path('app_procesar_pedido') }}", {
+method: 'POST',
+body: formData
+});
+const datos = await respuesta.json();
+$table.bootstrapTable('refresh')
+},
+'change .add_cliente': function (e, value, row, index) {
+row.cliente = e.target.value;
+},
+'click .cancelar': async function (e, value, row, index) {
+const formData = new FormData();
+formData.append('id', row.id);
+const respuesta = await fetch("{{ path('app_cancelar_pedido') }}", {
+method: 'POST',
+body: formData
+});
+const datos = await respuesta.json();
+$table.bootstrapTable('refresh')
+}
+}
+function buttons() {
+return {
+btnVerPedidos: {
+html: '<a  class="btn btn-warning">ver pedidos</a>'
+},
+btnHacerPedido: {
+html: '<a href="   {{ path('app_pedido') }}" class="btn btn-danger">hacer pedido</a>'
+},
+btnGastos: {
+html: '<a href="   {{ path('app_gasto') }}" class="btn btn-danger">Caja</a>'
+},
+btnInventario: {
+html: '<a href="   {{ path('app_inventario') }}" class="btn btn-danger">inventario</a>'
+},
+btnInforme: {
+html: '<a href="   {{ path('app_informes') }}" class="btn btn-danger">informe</a>'
+}
+}
+}
+
+const socket = new WebSocket('ws://192.168.51.14:8000');
+socket.onopen = function () {
+console.log('Conexión establecida');
+};
+socket.onmessage = function (event) {
+$table.bootstrapTable('refresh');
+console.log(event.data);
+};
+
+socket.onerror = function (error) {
+ alert('no se pudo establecer conecion al websocket');	
+console.log('Error:', error);
+};
+socket.onclose = function () {
+console.log('Conexión cerrada');
+};
+	</script>
 {% endblock %}

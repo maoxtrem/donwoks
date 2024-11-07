@@ -10,6 +10,7 @@ use App\Repository\DetallePedidoRepository;
 use App\Repository\GrupoProductoRepository;
 use App\Repository\PedidoRepository;
 use App\Repository\ProductoRepository;
+use App\WebSocket\RatchetClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,13 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class PedidoController extends AbstractController
 {
+
+    public function __construct(private  RatchetClient $ratchetClient,)
+    {
+       
+    }
+ 
+
     #[Route('/', name: 'app_pedido')]
     public function index(
         Request $request,
@@ -87,6 +95,7 @@ class PedidoController extends AbstractController
         }
         $pedido->cancelar();
         $pedidoRepository->guardar($pedido);
+        $this->ratchetClient->send('pedido cancelado');
         return new JsonResponse([], 200, ['Content-Type' => 'application/json']);
     }
     #[Route('/procesar_pedido', name: 'app_procesar_pedido')]
@@ -112,6 +121,7 @@ class PedidoController extends AbstractController
 
         $pedido->nextEstado();
         $pedidoRepository->guardar($pedido);
+        $this->ratchetClient->send('pedido procesado');
         return new JsonResponse([], 200, ['Content-Type' => 'application/json']);
     }
     #[Route('/pedir', name: 'app_pedir')]
@@ -120,6 +130,7 @@ class PedidoController extends AbstractController
         DetallePedidoRepository $detallePedidoRepository,
         ProductoRepository $productoRepository,
         ClienteRepository $clienteRepository,
+        RatchetClient $ratchetClient,
         Request $request
     ): JsonResponse {
         $code = $request->getPayload()->getString('code');
@@ -164,7 +175,7 @@ class PedidoController extends AbstractController
         $pedido->setPrecio($total);
         $pedido->setUtilidad($utilidad);
         $pedidoRepository->guardar($pedido);
-
+        $this->ratchetClient->send('nuevo pedido');
         return new JsonResponse();
     }
 }
