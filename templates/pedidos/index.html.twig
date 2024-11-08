@@ -28,7 +28,7 @@
 		</div>
 	</div>
 	<script>
-		const $table = $('#table');
+const $table = $('#table');
 
 function insert(row) {
 let ids = $table.bootstrapTable('getData');
@@ -104,25 +104,27 @@ function operateFormatter(value, row, index) {
 let botones = [];
 const estado = ['procesar', 'terminar', 'entregar'];
 const color = ['primary', 'warning', 'success'];
-row.estado < 3 && botones.push(`<a class="procesar btn btn-${
-color[row.estado]
-} btn-sm m-2" href="javascript:void(0)">${
-estado[row.estado]
-}</a>`);
+row.estado < 3 && botones.push(`<a class="procesar btn btn-${color[row.estado]} btn-sm m-2" href="javascript:void(0)">${estado[row.estado]}</a>`);
 row.estado < 3 && botones.push(`<a class="cancelar btn btn-danger btn-sm m-2" href="javascript:void(0)"><i class="bi bi-trash"></i></a>`);
 return botones.join('')
 }
+
+
 window.operateEventsPedidos = {
 'click .procesar': async function (e, value, row, index) {
 const formData = new FormData();
 formData.append('id', row.id);
 row.cliente && formData.append('cliente', row.cliente);
-console.log(row);
 const respuesta = await fetch("{{ path('app_procesar_pedido') }}", {
 method: 'POST',
 body: formData
 });
 const datos = await respuesta.json();
+
+
+if(window.websocketState){
+	return 
+}
 $table.bootstrapTable('refresh')
 },
 'change .add_cliente': function (e, value, row, index) {
@@ -136,6 +138,9 @@ method: 'POST',
 body: formData
 });
 const datos = await respuesta.json();
+if(window.websocketState){
+	return 
+}
 $table.bootstrapTable('refresh')
 }
 }
@@ -155,25 +160,33 @@ html: '<a href="   {{ path('app_inventario') }}" class="btn btn-danger">inventar
 },
 btnInforme: {
 html: '<a href="   {{ path('app_informes') }}" class="btn btn-danger">informe</a>'
-}
+},
+btnWebSocket: {
+html: `<a href="javascript:void(0)" class="btn btn-${window.websocketState?'success':'danger'}"><i class="bi bi-power"></i></a>`
+},
 }
 }
 
-const socket = new WebSocket('ws://192.168.51.14:8000');
+
+window.websocketState = false;
+const socket = new WebSocket('ws://{{ip_server}}:8000');
 socket.onopen = function () {
+	window.websocketState = true;
 console.log('Conexión establecida');
 };
 socket.onmessage = function (event) {
+
 $table.bootstrapTable('refresh');
 console.log(event.data);
 };
 
 socket.onerror = function (error) {
- alert('no se pudo establecer conecion al websocket');	
 console.log('Error:', error);
 };
 socket.onclose = function () {
 console.log('Conexión cerrada');
 };
+
+
 	</script>
 {% endblock %}

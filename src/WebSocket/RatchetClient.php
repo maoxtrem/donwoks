@@ -11,7 +11,7 @@ class RatchetClient
             $conn->send($msg);
             $conn->close();
         }, function ($e) {
-            echo "Could not connect: {$e->getMessage()}\n";
+            //echo "Could not connect: {$e->getMessage()}\n";
         });
     }
 }

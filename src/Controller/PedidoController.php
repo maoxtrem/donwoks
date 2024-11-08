@@ -56,10 +56,9 @@ class PedidoController extends AbstractController
         ]]);
     }
     #[Route('/pedidos', name: 'app_pedidos')]
-    public function pedidos(PedidoRepository $pedidoRepository): Response
+    public function pedidos(): Response
     {
-        $productos = $pedidoRepository->findAll();
-        return $this->render('pedidos/index.html.twig', ['productos' => $productos]);
+        return $this->render('pedidos/index.html.twig', ['ip_server' => $_SERVER['HTTP_HOST']]);
     }
 
 
@@ -122,7 +121,7 @@ class PedidoController extends AbstractController
         $pedido->nextEstado();
         $pedidoRepository->guardar($pedido);
         $this->ratchetClient->send('pedido procesado');
-        return new JsonResponse([], 200, ['Content-Type' => 'application/json']);
+        return new JsonResponse();
     }
     #[Route('/pedir', name: 'app_pedir')]
     public function pedir(

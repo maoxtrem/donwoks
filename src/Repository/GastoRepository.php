@@ -56,7 +56,9 @@ class GastoRepository extends ServiceEntityRepository
                 'p.tipomivimiento tipo_movimiento'
             )
             ->andWhere('p.precio != 0')
-            ->setParameter('hoy', $this->hoy);
+            ->andWhere('p.cancelado = 0')
+            ;
+      
         $movimiento && $SQL->andWhere('p.tipomivimiento = :movimiento')
             ->setParameter('movimiento', $movimiento);
         return $SQL->getQuery()

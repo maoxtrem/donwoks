@@ -67,7 +67,7 @@
 				</tr>
 				<tr>
 					<th data-align="center" data-field="id">id</th>
-					<th data-field="fecha" data-footer-formatter="total" data-formatter="fecha">hora</th>
+					<th data-field="fecha" data-footer-formatter="total" data-formatter="hora">hora</th>
 					<th data-field="detalle">Detalle</th>
 					<th data-field="precio" data-footer-formatter="suma">Valor</th>
 				</tr>
@@ -82,7 +82,7 @@
 				</tr>
 				<tr>
 					<th data-align="center" data-field="id">id</th>
-					<th data-field="fecha" data-footer-formatter="total" data-formatter="fecha">hora</th>
+					<th data-field="fecha" data-footer-formatter="total" data-formatter="hora">hora</th>
 					<th data-field="detalle">Detalle</th>
 					<th data-field="precio" data-footer-formatter="suma">Valor</th>
 				</tr>
@@ -90,29 +90,31 @@
 		</table>
 	
 		<table class="table table-sm " id="table_deudas" data-toggle="table" data-show-footer="true" data-url="{{path('app_get_gasto')}}?movimiento=deuda">
-			<thead>
+				<thead>
 				<tr>
-					<th colspan="4" class="text-center bg-dark text-white">Deudas</th>
+					<th colspan="5" class="text-center bg-dark text-white">Deuda</th>
 				</tr>
 				<tr>
-					<th data-align="center" data-field="id">id</th>
-					<th data-field="fecha" data-footer-formatter="total" data-formatter="fecha">hora</th>
-					<th data-field="detalle">Detalle</th>
+					<th data-align="center" data-width="60" data-field="id">id</th>
+					<th data-align="center" data-field="fecha" data-width="100" data-formatter="fecha">fecha</th>
+					<th data-field="detalle" data-footer-formatter="total">Detalle</th>
 					<th data-field="precio" data-footer-formatter="suma">Valor</th>
+					<th data-align="center" data-width="200" data-field="operate" data-formatter="operateButtonDeuda" data-events="operateEventsGastos">accion</th>
 				</tr>
 			</thead>
 		</table>
 
 		<table class="table table-sm " id="table_credito" data-toggle="table" data-show-footer="true" data-url="{{path('app_get_gasto')}}?movimiento=credito">
-			<thead>
+				<thead>
 				<tr>
-					<th colspan="4" class="text-center bg-dark text-white">Credito</th>
+					<th colspan="5" class="text-center bg-dark text-white">Credito</th>
 				</tr>
 				<tr>
-					<th data-align="center" data-field="id">id</th>
-					<th data-field="fecha" data-footer-formatter="total" data-formatter="fecha">hora</th>
-					<th data-field="detalle">Detalle</th>
+					<th data-align="center" data-width="60" data-field="id">id</th>
+					<th data-align="center" data-field="fecha" data-width="100" data-formatter="fecha">fecha</th>
+					<th data-field="detalle" data-footer-formatter="total">Detalle</th>
 					<th data-field="precio" data-footer-formatter="suma">Valor</th>
+					<th data-align="center" data-field="operate" data-formatter="operateButtonDelete" data-events="operateEventsGastos">accion</th>
 				</tr>
 			</thead>
 		</table>
@@ -120,13 +122,14 @@
 		<table class="table table-sm " id="table_prestamo" data-toggle="table" data-show-footer="true" data-url="{{path('app_get_gasto')}}?movimiento=prestamo">
 			<thead>
 				<tr>
-					<th colspan="4" class="text-center bg-dark text-white">Prestamo</th>
+					<th colspan="5" class="text-center bg-dark text-white">Prestamo</th>
 				</tr>
 				<tr>
-					<th data-align="center" data-field="id">id</th>
-					<th data-field="fecha" data-footer-formatter="total" data-formatter="fecha">hora</th>
-					<th data-field="detalle">Detalle</th>
+					<th data-align="center" data-width="60" data-field="id">id</th>
+					<th data-align="center" data-field="fecha" data-width="100" data-formatter="fecha">fecha</th>
+					<th data-field="detalle" data-footer-formatter="total">Detalle</th>
 					<th data-field="precio" data-footer-formatter="suma">Valor</th>
+					<th data-align="center" data-field="operate" data-formatter="operateButtonDelete" data-events="operateEventsGastos">accion</th>
 				</tr>
 			</thead>
 		</table>
@@ -166,10 +169,12 @@ return '$' + data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0)
 }
 
 function fecha(value, row) {
+return formato_fecha(row.fecha,false);
+}
+function hora(value, row) {
 return formato_fecha(row.fecha);
 }
-
-function formato_fecha(fecha) {
+function formato_fecha(fecha,hora=true) {
 const date = new Date(fecha.date + 'Z');
 const day = String(date.getUTCDate()).padStart(2, '0');
 const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Los meses son de 0 a 11
@@ -179,7 +184,10 @@ const minutes = String(date.getUTCMinutes()).padStart(2, '0');
 const seconds = String(date.getUTCSeconds()).padStart(2, '0');
 
 // Formatear la fecha como dd-MM-yyyy HH:mm:ss
+if(hora){
 return `${hours}:${minutes}:${seconds}`;
+}
+return `${day}-${month}-${year}`;
 }
 
 function buttons() {
@@ -198,6 +206,42 @@ html: '<a href="     {{ path('app_inventario') }}" class="btn btn-danger">invent
 },
 btnInforme: {
 html: '<a href="     {{ path('app_informes') }}" class="btn btn-danger">informe</a>'
+}
+}
+}
+
+function operateButtonDelete(){
+ return [
+`<a href="javascript:void(0)" class="cancelar btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>`,
+ ].join('')
+}
+
+function operateButtonDeuda(){
+ return [
+`<a href="javascript:void(0)" class="deuda_gasto btn btn-sm btn-primary">gasto</a>`,
+`<a href="javascript:void(0)" class="deuda_inversion btn btn-sm btn-success m-1">inversion</i></a>`,
+operateButtonDelete()
+ ].join('')
+}
+
+window.operateEventsGastos = {
+
+'click .cancelar': async function (e, value, row, index) {
+const formData = new FormData();
+formData.append('id', row.id);
+const respuesta = await fetch("{{ path('app_cancelar_gasto') }}", {
+method: 'POST',
+body: formData
+});
+const datos = await respuesta.json();
+if('prestamo'===datos.movimiento){
+	$table_prestamo.bootstrapTable('refresh');
+}
+if('credito'===datos.movimiento){
+	$table_credito.bootstrapTable('refresh');
+}
+if('deuda'===datos.movimiento){
+	$table_deudas.bootstrapTable('refresh');
 }
 }
 }

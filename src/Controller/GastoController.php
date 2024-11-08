@@ -43,11 +43,25 @@ class GastoController extends AbstractController
     ): JsonResponse {
         $movimirnto = $request->query->get('movimiento');
 
-        if(in_array($movimirnto, ['deuda','credito','prestamo']) ){
+        if (in_array($movimirnto, ['deuda', 'credito', 'prestamo'])) {
             $json['rows'] = $gastoRepository->get_gastos($movimirnto);
             return new JsonResponse($json, 200, ['Content-Type' => 'application/json']);
         }
         $json['rows'] = $gastoRepository->get_gastos($movimirnto);
         return new JsonResponse($json, 200, ['Content-Type' => 'application/json']);
+    }
+
+    #[Route('/cancelar_gasto', name: 'app_cancelar_gasto')]
+    public function cancelar_gasto(
+        GastoRepository $gastoRepository,
+        Request $request
+    ): JsonResponse {
+        $id = $request->request->get('id');
+        $gasto = $gastoRepository->findOneBy(['id' => $id]);
+        if ($gasto instanceof Gasto) {
+            $gasto->cancelar();
+           // $gastoRepository->guardar($gasto);
+        }
+        return new JsonResponse(['movimiento'=>$gasto->getTipoMivimiento()], 200, ['Content-Type' => 'application/json']);
     }
 }
