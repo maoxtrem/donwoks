@@ -58,7 +58,9 @@ class PedidoController extends AbstractController
     #[Route('/pedidos', name: 'app_pedidos')]
     public function pedidos(): Response
     {
-        return $this->render('pedidos/index.html.twig', ['ip_server' => $_SERVER['HTTP_HOST']]);
+
+      
+        return $this->render('pedidos/index.html.twig', ['ip_server' => explode(':', $_SERVER['HTTP_HOST'])[0]]);
     }
 
 
@@ -129,7 +131,6 @@ class PedidoController extends AbstractController
         DetallePedidoRepository $detallePedidoRepository,
         ProductoRepository $productoRepository,
         ClienteRepository $clienteRepository,
-        RatchetClient $ratchetClient,
         Request $request
     ): JsonResponse {
         $code = $request->getPayload()->getString('code');
