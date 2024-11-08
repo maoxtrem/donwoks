@@ -42,6 +42,11 @@ class GastoController extends AbstractController
         Request $request
     ): JsonResponse {
         $movimirnto = $request->query->get('movimiento');
+
+        if(in_array($movimirnto, ['deuda','credito','prestamo']) ){
+            $json['rows'] = $gastoRepository->get_gastos($movimirnto);
+            return new JsonResponse($json, 200, ['Content-Type' => 'application/json']);
+        }
         $json['rows'] = $gastoRepository->get_gastos($movimirnto);
         return new JsonResponse($json, 200, ['Content-Type' => 'application/json']);
     }

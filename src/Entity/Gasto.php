@@ -29,6 +29,9 @@ class Gasto
     #[ORM\Column(length: 255,nullable: true)]
     private ?string $tipomivimiento = null;
 
+    #[ORM\Column]
+    private ?bool $cancelado = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +92,22 @@ class Gasto
     public function setTipoMivimiento(string $tipo_mivimiento): static
     {
         $this->tipomivimiento = $tipo_mivimiento;
+
+        return $this;
+    }
+
+    public function isCancelado(): ?bool
+    {
+        return $this->cancelado;
+    }
+
+    public function cancelar(): void
+    {
+       $this->cancelado = true;
+    }
+    public function setCancelado(bool $cancelado): static
+    {
+        $this->cancelado = $cancelado;
 
         return $this;
     }

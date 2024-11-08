@@ -44,6 +44,24 @@ class GastoRepository extends ServiceEntityRepository
         return $SQL->getQuery()
             ->getArrayResult();
     }
+    public function get_deudas(?string $movimiento = null): array
+    {
+
+        $SQL = $this->createQueryBuilder('p')
+            ->select(
+                'p.id id',
+                'p.fechacreate fecha',
+                'p.detalle detalle',
+                'p.precio precio',
+                'p.tipomivimiento tipo_movimiento'
+            )
+            ->andWhere('p.precio != 0')
+            ->setParameter('hoy', $this->hoy);
+        $movimiento && $SQL->andWhere('p.tipomivimiento = :movimiento')
+            ->setParameter('movimiento', $movimiento);
+        return $SQL->getQuery()
+            ->getArrayResult();
+    }
 
 
 
