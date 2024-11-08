@@ -162,7 +162,7 @@ btnInforme: {
 html: '<a href="   {{ path('app_informes') }}" class="btn btn-danger">informe</a>'
 },
 btnWebSocket: {
-html: `<a href="javascript:void(0)" class="btn btn-${window.websocketState?'success':'danger'}"><i class="bi bi-power"></i></a>`
+html: `<a href="javascript:void(0)" title="websocket ${window.websocketState?'on':'off'}" class="btn btn-${window.websocketState?'success':'danger'}"><i class="bi bi-plug"></i></a>`
 },
 }
 }

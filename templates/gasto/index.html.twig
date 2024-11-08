@@ -243,6 +243,28 @@ if('credito'===datos.movimiento){
 if('deuda'===datos.movimiento){
 	$table_deudas.bootstrapTable('refresh');
 }
+},
+'click .deuda_gasto': async function (e, value, row, index) {
+const formData = new FormData();
+formData.append('id', row.id);
+formData.append('movimiento', 'gasto');
+const respuesta = await fetch("{{ path('app_cancelar_deuda') }}", {
+method: 'POST',
+body: formData
+});
+const datos = await respuesta.json();
+	$table_deudas.bootstrapTable('refresh');
+},
+'click .deuda_inversion': async function (e, value, row, index) {
+const formData = new FormData();
+formData.append('id', row.id);
+formData.append('movimiento', 'inversion');
+const respuesta = await fetch("{{ path('app_cancelar_deuda') }}", {
+method: 'POST',
+body: formData
+});
+const datos = await respuesta.json();
+$table_deudas.bootstrapTable('refresh');
 }
 }
 	</script>
