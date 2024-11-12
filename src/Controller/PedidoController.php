@@ -76,7 +76,8 @@ class PedidoController extends AbstractController
         DetallePedidoRepository $detallePedidoRepository,
         Request $request
     ): JsonResponse {
-        $id = $request->getPayload()->getInt('id');
+      $id = $request->getPayload()->getInt('id');
+          #$id = $request->query->get('id');
         $json['rows'] = $detallePedidoRepository->get_pedidos_detalles($id);
         return new JsonResponse($json, 200, ['Content-Type' => 'application/json']);
     }

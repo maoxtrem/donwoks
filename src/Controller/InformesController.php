@@ -83,7 +83,7 @@ class InformesController extends AbstractController
       if(!$gastos instanceof Gasto){
         $gastos = new Gasto;
         $gastos->setPrecio(0); 
-        $gastos->setTipoMivimiento('gasto');
+        $gastos->setTipoMovimiento('gasto');
         $gastos->setDetalle('fix'); 
         $gastoRepository->guardar($gastos);
       }
@@ -92,7 +92,7 @@ class InformesController extends AbstractController
         $inversion = new Gasto;
         $inversion->setPrecio(0); 
         $inversion->setDetalle('fix');
-        $inversion->setTipoMivimiento('inversion'); 
+        $inversion->setTipoMovimiento('inversion'); 
         $gastoRepository->guardar($inversion);
       }
 

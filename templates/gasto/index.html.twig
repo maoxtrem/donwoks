@@ -4,268 +4,300 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container mt-5">
-		<h2 class="mb-4 text-center fw-bold text-primary">Ingresar una transaccion</h2>
-		<form id="form_gasto" class="px-3 py-3 border rounded shadow-sm">
-				<div class="row mb-2">
-					<div class="col-md-6">
-						<label for="concepto" class="form-label fw-bold ">Concepto</label>
-						<input type="text" class="form-control rounded" name="concepto" placeholder="Ingresa el concepto" required>
-					</div>
-					<div class="col-md-6">
-						<label for="valor" class="form-label fw-bold ">Valor</label>
-						<input type="number" class="form-control rounded" name="valor" placeholder="Ingresa el valor" required>
+<div class="container mt-5">
+	<h2 class="mb-4 text-center fw-bold text-primary">Ingresar una transaccion</h2>
+	<form id="form_gasto" class="px-3 py-3 border rounded shadow-sm">
+		<div class="row mb-2">
+			<div class="col-md-6">
+				<label for="concepto" class="form-label fw-bold ">Concepto</label>
+				<input type="text" class="form-control rounded" name="concepto" placeholder="Ingresa el concepto"
+					required>
+			</div>
+			<div class="col-md-6">
+				<label for="valor" class="form-label fw-bold ">Valor</label>
+				<input type="number" class="form-control rounded" name="valor" placeholder="Ingresa el valor" required>
 
-					</div>
+			</div>
+		</div>
+		<div class="row">
+			<label class="mb-2 fw-bold ">Tipo de movimiento</label>
+			<div class="col-auto">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="tipo_movimiento" id="gasto" value="gasto"
+						checked>
+					<label class="form-check-label" for="gasto">Gasto</label>
 				</div>
-				<div class="row">
-					<label class="mb-2 fw-bold ">Tipo de movimiento</label>
-					<div class="col-auto">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="tipo_movimiento" id="gasto" value="gasto" checked>
-							<label class="form-check-label" for="gasto">Gasto</label>
-						</div>
-					</div>
-					<div class="col-auto">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="tipo_movimiento" id="inversion" value="inversion">
-							<label class="form-check-label" for="inversion">Inversión</label>
-						</div>
-					</div>
-					<div class="col-auto">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="tipo_movimiento" id="credito" value="credito">
-							<label class="form-check-label" for="credito">Credito</label>
-						</div>
-					</div>
-					<div class="col-auto">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="tipo_movimiento" id="prestamo" value="prestamo">
-							<label class="form-check-label" for="prestamo">Prestamo</label>
-						</div>
-					</div>
-										<div class="col-auto">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="tipo_movimiento" id="deuda" value="deuda">
-							<label class="form-check-label" for="deuda">Deuda</label>
-						</div>
-					</div>
-					<div class="col-auto">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="tipo_movimiento" id="cierre_mes" value="cierre_mes">
-							<label class="form-check-label" for="cierre_mes">Cierre mes</label>
-						</div>
-					</div>
+			</div>
+			<div class="col-auto">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="tipo_movimiento" id="inversion"
+						value="inversion">
+					<label class="form-check-label" for="inversion">Inversión</label>
 				</div>
-			<button type="submit" class="btn btn-primary btn-block rounded-pill mt-3">Enviar</button>
-		</form>
+			</div>
+			<div class="col-auto">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="tipo_movimiento" id="credito" value="credito">
+					<label class="form-check-label" for="credito">Credito</label>
+				</div>
+			</div>
+			<div class="col-auto">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="tipo_movimiento" id="prestamo" value="prestamo">
+					<label class="form-check-label" for="prestamo">Prestamo</label>
+				</div>
+			</div>
+			<div class="col-auto">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="tipo_movimiento" id="deuda" value="deuda">
+					<label class="form-check-label" for="deuda">Deuda</label>
+				</div>
+			</div>
+			<div class="col-auto">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="tipo_movimiento" id="cierre_mes"
+						value="cierre_mes">
+					<label class="form-check-label" for="cierre_mes">Cierre mes</label>
+				</div>
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary btn-block rounded-pill mt-3">Enviar</button>
+	</form>
 
-		<table class="table table-sm " id="table" data-toggle="table" data-show-footer="true" data-url="{{path('app_get_gasto')}}?movimiento=inversion" data-buttons="buttons">
-			<thead>
-				<tr>
-					<th colspan="4" class="text-center bg-dark text-white">Inversion</th>
-				</tr>
-				<tr>
-					<th data-align="center" data-field="id">id</th>
-					<th data-field="fecha" data-footer-formatter="total" data-formatter="hora">hora</th>
-					<th data-field="detalle">Detalle</th>
-					<th data-field="precio" data-footer-formatter="suma">Valor</th>
-				</tr>
-			</thead>
-		</table>
-	
-	
-		<table class="table table-sm " id="table_gastos" data-toggle="table" data-show-footer="true" data-url="{{path('app_get_gasto')}}?movimiento=gasto">
-			<thead>
-				<tr>
-					<th colspan="4" class="text-center bg-dark text-white">Gastos</th>
-				</tr>
-				<tr>
-					<th data-align="center" data-field="id">id</th>
-					<th data-field="fecha" data-footer-formatter="total" data-formatter="hora">hora</th>
-					<th data-field="detalle">Detalle</th>
-					<th data-field="precio" data-footer-formatter="suma">Valor</th>
-				</tr>
-			</thead>
-		</table>
-	
-		<table class="table table-sm " id="table_deudas" data-toggle="table" data-show-footer="true" data-url="{{path('app_get_gasto')}}?movimiento=deuda">
-				<thead>
-				<tr>
-					<th colspan="5" class="text-center bg-dark text-white">Deuda</th>
-				</tr>
-				<tr>
-					<th data-align="center" data-width="60" data-field="id">id</th>
-					<th data-align="center" data-field="fecha" data-width="100" data-formatter="fecha">fecha</th>
-					<th data-field="detalle" data-footer-formatter="total">Detalle</th>
-					<th data-field="precio" data-footer-formatter="suma">Valor</th>
-					<th data-align="center" data-width="200" data-field="operate" data-formatter="operateButtonDeuda" data-events="operateEventsGastos">accion</th>
-				</tr>
-			</thead>
-		</table>
+	<table class="table table-sm " id="table" data-toggle="table" data-show-footer="true"
+		data-url="{{path('app_get_gasto')}}?movimiento=inversion" data-buttons="buttons">
+		<thead>
+			<tr>
+				<th colspan="4" class="text-center bg-dark text-white">Inversion</th>
+			</tr>
+			<tr>
+				<th data-align="center" data-field="id">id</th>
+				<th data-field="fecha" data-footer-formatter="total" data-formatter="hora">hora</th>
+				<th data-field="detalle">Detalle</th>
+				<th data-field="precio" data-footer-formatter="suma">Valor</th>
+			</tr>
+		</thead>
+	</table>
 
-		<table class="table table-sm " id="table_credito" data-toggle="table" data-show-footer="true" data-url="{{path('app_get_gasto')}}?movimiento=credito">
-				<thead>
-				<tr>
-					<th colspan="5" class="text-center bg-dark text-white">Credito</th>
-				</tr>
-				<tr>
-					<th data-align="center" data-width="60" data-field="id">id</th>
-					<th data-align="center" data-field="fecha" data-width="100" data-formatter="fecha">fecha</th>
-					<th data-field="detalle" data-footer-formatter="total">Detalle</th>
-					<th data-field="precio" data-footer-formatter="suma">Valor</th>
-					<th data-align="center" data-field="operate" data-formatter="operateButtonDelete" data-events="operateEventsGastos">accion</th>
-				</tr>
-			</thead>
-		</table>
 
-		<table class="table table-sm " id="table_prestamo" data-toggle="table" data-show-footer="true" data-url="{{path('app_get_gasto')}}?movimiento=prestamo">
-			<thead>
-				<tr>
-					<th colspan="5" class="text-center bg-dark text-white">Prestamo</th>
-				</tr>
-				<tr>
-					<th data-align="center" data-width="60" data-field="id">id</th>
-					<th data-align="center" data-field="fecha" data-width="100" data-formatter="fecha">fecha</th>
-					<th data-field="detalle" data-footer-formatter="total">Detalle</th>
-					<th data-field="precio" data-footer-formatter="suma">Valor</th>
-					<th data-align="center" data-field="operate" data-formatter="operateButtonDelete" data-events="operateEventsGastos">accion</th>
-				</tr>
-			</thead>
-		</table>
-	</div>
-	<script>
-		const $table = $('#table');
-		const $table_gastos = $('#table_gastos');
-		const $table_deudas = $('#table_deudas');
-		const $table_credito = $('#table_credito');
-		const $table_prestamo = $('#table_prestamo');
-const form_gasto = document.querySelector('#form_gasto')
-form_gasto.addEventListener('submit', async (e) => {
-e.preventDefault();
-try {
-const formData = new FormData(e.target);
-const respuesta = await fetch("{{ path('app_gasto_enviar') }}", {
-method: 'POST',
-body: formData
-});
-const datos = await respuesta.json();
-$table.bootstrapTable('refresh');
-$table_gastos.bootstrapTable('refresh');
-$table_deudas.bootstrapTable('refresh');
-$table_credito.bootstrapTable('refresh');
-$table_prestamo.bootstrapTable('refresh');
-form_gasto.reset();
-} catch (error) {
-console.error('Error:', error);
-}
-})
+	<table class="table table-sm " id="table_gastos" data-toggle="table" data-show-footer="true"
+		data-url="{{path('app_get_gasto')}}?movimiento=gasto">
+		<thead>
+			<tr>
+				<th colspan="4" class="text-center bg-dark text-white">Gastos</th>
+			</tr>
+			<tr>
+				<th data-align="center" data-field="id">id</th>
+				<th data-field="fecha" data-footer-formatter="total" data-formatter="hora">hora</th>
+				<th data-field="detalle">Detalle</th>
+				<th data-field="precio" data-footer-formatter="suma">Valor</th>
+			</tr>
+		</thead>
+	</table>
 
-function total() {
-return "TOTAL"
-}
-function suma(data) {
-return '$' + data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0)
-}
+	<table class="table table-sm " id="table_deudas" data-toggle="table" data-show-footer="true"
+		data-url="{{path('app_get_gasto')}}?movimiento=deuda">
+		<thead>
+			<tr>
+				<th colspan="6" class="text-center bg-dark text-white">Deuda</th>
+			</tr>
+			<tr>
+				<th data-align="center" data-width="60" data-field="id">id</th>
+				<th data-align="center" data-field="fecha" data-width="100" data-formatter="fecha">fecha</th>
+				<th data-field="detalle" data-footer-formatter="total">Detalle</th>
+				<th data-field="precio" data-footer-formatter="suma">Valor</th>
+				<th data-field="abono" data-width="200" data-formatter="operateButtonAbono" data-events="operateEventsGastos">abono</th>
+				<th data-align="center" data-width="200" data-field="operate" data-formatter="operateButtonDeuda"
+					data-events="operateEventsGastos">accion</th>
+			</tr>
+		</thead>
+	</table>
 
-function fecha(value, row) {
-return formato_fecha(row.fecha,false);
-}
-function hora(value, row) {
-return formato_fecha(row.fecha);
-}
-function formato_fecha(fecha,hora=true) {
-const date = new Date(fecha.date + 'Z');
-const day = String(date.getUTCDate()).padStart(2, '0');
-const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Los meses son de 0 a 11
-const year = date.getUTCFullYear();
-const hours = String(date.getUTCHours()).padStart(2, '0');
-const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+	<table class="table table-sm " id="table_credito" data-toggle="table" data-show-footer="true"
+		data-url="{{path('app_get_gasto')}}?movimiento=credito">
+		<thead>
+			<tr>
+				<th colspan="6" class="text-center bg-dark text-white">Credito</th>
+			</tr>
+			<tr>
+				<th data-align="center" data-width="60" data-field="id">id</th>
+				<th data-align="center" data-field="fecha" data-width="100" data-formatter="fecha">fecha</th>
+				<th data-field="detalle" data-footer-formatter="total">Detalle</th>
+				<th data-field="precio" data-footer-formatter="suma">Valor</th>
+					<th data-field="abono" data-width="200" data-formatter="operateButtonAbono" data-events="operateEventsGastos">abono</th>
+				<th data-align="center" data-width="100" data-field="operate" data-formatter="operateButtonDelete"
+					data-events="operateEventsGastos">accion</th>
+			</tr>
+		</thead>
+	</table>
 
-// Formatear la fecha como dd-MM-yyyy HH:mm:ss
-if(hora){
-return `${hours}:${minutes}:${seconds}`;
-}
-return `${day}-${month}-${year}`;
-}
+	<table class="table table-sm " id="table_prestamo" data-toggle="table" data-show-footer="true"
+		data-url="{{path('app_get_gasto')}}?movimiento=prestamo">
+		<thead>
+			<tr>
+				<th colspan="6" class="text-center bg-dark text-white">Prestamo</th>
+			</tr>
+			<tr>
+				<th data-align="center" data-width="60" data-field="id">id</th>
+				<th data-align="center" data-field="fecha" data-width="100" data-formatter="fecha">fecha</th>
+				<th data-field="detalle" data-footer-formatter="total">Detalle</th>
+				<th data-field="precio" data-footer-formatter="suma">Valor</th>
+					<th data-field="abono" data-width="200" data-formatter="operateButtonAbono" data-events="operateEventsGastos">abono</th>
+				<th data-align="center" data-width="100" data-field="operate" data-formatter="operateButtonDelete"
+					data-events="operateEventsGastos">accion</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+<script>
+	const $table = $('#table');
+	const $table_gastos = $('#table_gastos');
+	const $table_deudas = $('#table_deudas');
+	const $table_credito = $('#table_credito');
+	const $table_prestamo = $('#table_prestamo');
+	const form_gasto = document.querySelector('#form_gasto')
+	form_gasto.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		try {
+			const formData = new FormData(e.target);
+			const respuesta = await fetch("{{ path('app_gasto_enviar') }}", {
+				method: 'POST',
+				body: formData
+			});
+			const datos = await respuesta.json();
+			$table.bootstrapTable('refresh');
+			$table_gastos.bootstrapTable('refresh');
+			$table_deudas.bootstrapTable('refresh');
+			$table_credito.bootstrapTable('refresh');
+			$table_prestamo.bootstrapTable('refresh');
+			form_gasto.reset();
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	})
 
-function buttons() {
-return {
-btnVerPedidos: {
-html: '<a href="     {{ path('app_pedidos') }}" class="btn btn-danger">ver pedidos</a>'
-},
-btnHacerPedido: {
-html: '<a href="     {{ path('app_pedido') }}" class="btn btn-danger">hacer pedido</a>'
-},
-btnGastos: {
-html: '<a class="btn btn-warning">Caja</a>'
-},
-btnInventario: {
-html: '<a href="     {{ path('app_inventario') }}" class="btn btn-danger">inventario</a>'
-},
-btnInforme: {
-html: '<a href="     {{ path('app_informes') }}" class="btn btn-danger">informe</a>'
-}
-}
-}
+	function total() {
+		return "TOTAL"
+	}
+	function suma(data) {
+		return '$' + data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0)
+	}
 
-function operateButtonDelete(){
- return [
-`<a href="javascript:void(0)" class="cancelar btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>`,
- ].join('')
-}
+	function fecha(value, row) {
+		return formato_fecha(row.fecha, false);
+	}
+	function hora(value, row) {
+		return formato_fecha(row.fecha);
+	}
+	function formato_fecha(fecha, hora = true) {
+		const date = new Date(fecha.date + 'Z');
+		const day = String(date.getUTCDate()).padStart(2, '0');
+		const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Los meses son de 0 a 11
+		const year = date.getUTCFullYear();
+		const hours = String(date.getUTCHours()).padStart(2, '0');
+		const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+		const seconds = String(date.getUTCSeconds()).padStart(2, '0');
 
-function operateButtonDeuda(){
- return [
-`<a href="javascript:void(0)" class="deuda_gasto btn btn-sm btn-primary">gasto</a>`,
-`<a href="javascript:void(0)" class="deuda_inversion btn btn-sm btn-success m-1">inversion</i></a>`,
-operateButtonDelete()
- ].join('')
-}
+		// Formatear la fecha como dd-MM-yyyy HH:mm:ss
+		if (hora) {
+			return `${hours}:${minutes}:${seconds}`;
+		}
+		return `${day}-${month}-${year}`;
+	}
 
-window.operateEventsGastos = {
+	function buttons() {
+		return {
+			btnVerPedidos: {
+				html: '<a href="{{ path("app_pedidos") }}" class="btn btn-danger">ver pedidos</a>'
+			},
+			btnHacerPedido: {
+				html: '<a href="{{ path("app_pedido") }}" class="btn btn-danger">hacer pedido</a>'
+			},
+			btnGastos: {
+				html: '<a class="btn btn-warning">Caja</a>'
+			},
+			btnInventario: {
+				html: '<a href="{{ path("app_inventario") }}" class="btn btn-danger">inventario</a>'
+			},
+			btnInforme: {
+				html: '<a href="{{ path("app_informes") }}" class="btn btn-danger">informe</a>'
+			}
+		}
+	}
 
-'click .cancelar': async function (e, value, row, index) {
-const formData = new FormData();
-formData.append('id', row.id);
-const respuesta = await fetch("{{ path('app_cancelar_gasto') }}", {
-method: 'POST',
-body: formData
-});
-const datos = await respuesta.json();
-if('prestamo'===datos.movimiento){
-	$table_prestamo.bootstrapTable('refresh');
-}
-if('credito'===datos.movimiento){
-	$table_credito.bootstrapTable('refresh');
-}
-if('deuda'===datos.movimiento){
-	$table_deudas.bootstrapTable('refresh');
-}
-},
-'click .deuda_gasto': async function (e, value, row, index) {
-const formData = new FormData();
-formData.append('id', row.id);
-formData.append('movimiento', 'gasto');
-const respuesta = await fetch("{{ path('app_cancelar_deuda') }}", {
-method: 'POST',
-body: formData
-});
-const datos = await respuesta.json();
-	$table_deudas.bootstrapTable('refresh');
-},
-'click .deuda_inversion': async function (e, value, row, index) {
-const formData = new FormData();
-formData.append('id', row.id);
-formData.append('movimiento', 'inversion');
-const respuesta = await fetch("{{ path('app_cancelar_deuda') }}", {
-method: 'POST',
-body: formData
-});
-const datos = await respuesta.json();
-$table_deudas.bootstrapTable('refresh');
-}
-}
-	</script>
+	function operateButtonDelete() {
+		return [
+			`<a href="javascript:void(0)" class="cancelar btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>`,
+		].join('')
+	}
+
+	function operateButtonDeuda() {
+		return [
+			`<a href="javascript:void(0)" class="deuda_gasto btn btn-sm btn-primary">gasto</a>`,
+			`<a href="javascript:void(0)" class="deuda_inversion btn btn-sm btn-success m-1">inversion</i></a>`,
+			operateButtonDelete()
+		].join('')
+	}
+	function operateButtonAbono() {
+		return [
+			   '<input class="deuda_abono deuda_abono_credito_prestamo form-control form-control-sm" type="number">'
+		].join('')
+	}
+
+	window.operateEventsGastos = {
+		'click .cancelar': async function (e, value, row, index) {
+			const formData = new FormData();
+			formData.append('id', row.id);
+			formData.append('abono', row.abono);
+			const respuesta = await fetch("{{ path('app_cancelar_gasto') }}", {
+				method: 'POST',
+				body: formData
+			});
+			const datos = await respuesta.json();
+			if ('prestamo' === datos.movimiento) {
+				$table_prestamo.bootstrapTable('refresh');
+			}
+			if ('credito' === datos.movimiento) {
+				$table_credito.bootstrapTable('refresh');
+			}
+			if ('deuda' === datos.movimiento) {
+				$table_deudas.bootstrapTable('refresh');
+			}
+		},
+		'click .deuda_gasto': async function (e, value, row, index) {
+			console.log(row);
+			const formData = new FormData();
+			formData.append('id', row.id);
+			formData.append('abono', row.abono);
+			formData.append('movimiento', 'gasto');
+			const respuesta = await fetch("{{ path('app_cancelar_deuda') }}", {
+				method: 'POST',
+				body: formData
+			});
+			const datos = await respuesta.json();
+			$table_deudas.bootstrapTable('refresh');
+			$table_gastos.bootstrapTable('refresh');
+		},
+		'click .deuda_inversion': async function (e, value, row, index) {
+			console.log(row);
+			const formData = new FormData();
+			formData.append('id', row.id);
+			formData.append('abono', row.abono);
+			formData.append('movimiento', 'inversion');
+			const respuesta = await fetch("{{ path('app_cancelar_deuda') }}", {
+				method: 'POST',
+				body: formData
+			});
+			const datos = await respuesta.json();
+			$table_deudas.bootstrapTable('refresh');
+			$table.bootstrapTable('refresh');
+		},
+		'change .deuda_abono':function (e, value, row, index) {
+			row.abono = +e.target.value
+		},
+		'change .deuda_abono_credito_prestamo':function (e, value, row, index) {
+			row.abono = +e.target.value
+		}
+	}
+</script>
 {% endblock %}

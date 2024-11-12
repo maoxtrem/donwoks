@@ -11,8 +11,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PedidoRepository extends ServiceEntityRepository
 {
-   
-    
+
+
     public function __construct(ManagerRegistry $registry, private \DateTime $hoy = new \DateTime())
     {
         parent::__construct($registry, Pedido::class);
@@ -27,7 +27,7 @@ class PedidoRepository extends ServiceEntityRepository
 
     public function get_pedidos(): array
     {
-       
+
         $SQL = $this->createQueryBuilder('p')
             ->select(
                 'p.id id',
@@ -56,11 +56,14 @@ class PedidoRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')
             ->select(
                 "SUM(p.precio) total_venta",
-                "(SELECT SUM(CASE WHEN g.tipomivimiento = 'gasto' THEN g.precio ELSE 0 END) FROM App\Entity\Gasto g WHERE DATE_FORMAT(g.fechacreate, '%Y-%m') = :fecha) total_gasto",
-                "(SELECT SUM(CASE WHEN i.tipomivimiento = 'inversion' THEN i.precio ELSE 0 END) FROM App\Entity\Gasto i WHERE DATE_FORMAT(i.fechacreate, '%Y-%m') = :fecha) total_inversion",
-               "(SELECT SUM(CASE WHEN c.tipomivimiento = 'cierre_mes' THEN c.precio ELSE 0 END) FROM App\Entity\Gasto c WHERE DATE_FORMAT(c.fechacreate, '%Y-%m') = :fecha) total_cierre",
+                "(SELECT SUM(CASE WHEN g.tipomovimiento = 'gasto' THEN g.precio ELSE 0 END) FROM App\Entity\Gasto g WHERE DATE_FORMAT(g.fechacreate, '%Y-%m') = :fecha) total_gasto",
+                "(SELECT SUM(CASE WHEN i.tipomovimiento = 'inversion' THEN i.precio ELSE 0 END) FROM App\Entity\Gasto i WHERE DATE_FORMAT(i.fechacreate, '%Y-%m') = :fecha) total_inversion",
+                "(SELECT SUM(CASE WHEN c.tipomovimiento = 'cierre_mes' THEN c.precio ELSE 0 END) FROM App\Entity\Gasto c WHERE DATE_FORMAT(c.fechacreate, '%Y-%m') = :fecha) total_cierre",
                 "(SELECT SUM(n.cantidad * n.costo) FROM App\Entity\Inventario n) activos_circulantes",
                 "SUM(p.utilidad)  total_utilidad",
+                "(SELECT SUM(CASE WHEN cr.tipomovimiento = 'credito' THEN cr.precio ELSE 0 END) FROM App\Entity\Gasto cr WHERE cr.cancelado = 0) total_credito",
+                "(SELECT SUM(CASE WHEN pr.tipomovimiento = 'prestamo' THEN pr.precio ELSE 0 END) FROM App\Entity\Gasto pr WHERE pr.cancelado = 0) total_prestamo",
+                "(SELECT SUM(CASE WHEN d.tipomovimiento = 'deuda' THEN d.precio ELSE 0 END) FROM App\Entity\Gasto d ) total_deuda",
                 "SUM(p.precio) caja",
 
             )
@@ -74,7 +77,7 @@ class PedidoRepository extends ServiceEntityRepository
 
     public function get_informe_pedidos_all(): array
     {
- 
+
         return $this->createQueryBuilder('p')
             ->select(
                 "DATE(p.fechacreate) fecha",
@@ -126,7 +129,7 @@ class PedidoRepository extends ServiceEntityRepository
 
     public function fixFecha(): ?Pedido
     {
-      
+
         $SQL = $this->createQueryBuilder('p')
             ->where('p.cancelado = false')
             ->andWhere("DATE(p.fechacreate) = DATE(:hoy)")

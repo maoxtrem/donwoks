@@ -31,7 +31,7 @@ class GastoController extends AbstractController
         $gasto = new Gasto();
         $gasto->setDetalle($concepto);
         $gasto->setPrecio($valor);
-        $gasto->setTipoMivimiento($tipo_movimiento);
+        $gasto->setTipoMovimiento($tipo_movimiento);
         $gastoRepository->guardar($gasto);
         $json['rows'] = [];
         return new JsonResponse($json, 200, ['Content-Type' => 'application/json']);
@@ -58,11 +58,32 @@ class GastoController extends AbstractController
     ): JsonResponse {
         $id = $request->request->get('id');
         $gasto = $gastoRepository->findOneBy(['id' => $id]);
-        if ($gasto instanceof Gasto) {
-            $gasto->cancelar();
-           $gastoRepository->guardar($gasto);
+        
+        if (!$gasto instanceof Gasto) {
+            return new JsonResponse(['movimiento' => 'movimiento no encontrado'], 200, ['Content-Type' => 'application/json']);
         }
-        return new JsonResponse(['movimiento'=>$gasto->getTipoMivimiento()], 200, ['Content-Type' => 'application/json']);
+        
+        $tipoMovimiento = $gasto->getTipoMovimiento();
+        $abono = $request->request->get('abono');
+        
+        if (in_array($tipoMovimiento, ['credito', 'prestamo'])) {
+            if ($abono > 0 && $abono < $gasto->getPrecio()) {
+                $gasto->setPrecio($gasto->getPrecio() - $abono);
+                $nuevo_gasto = new Gasto;
+                $nuevo_gasto->setDetalle($gasto->getDetalle() . ' - abono');
+                $nuevo_gasto->setPrecio($abono);
+                $nuevo_gasto->setTipoMovimiento($gasto->getTipoMovimiento());
+                $nuevo_gasto->cancelar();
+                $gastoRepository->guardar($nuevo_gasto);
+            } else {
+                $gasto->cancelar();
+            }
+        } else {
+            $gasto->cancelar();
+        }
+        
+        $gastoRepository->guardar($gasto);
+        return new JsonResponse(['movimiento' => $gasto->getTipoMovimiento()], 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/cancelar_deuda', name: 'app_cancelar_deuda')]
@@ -71,13 +92,24 @@ class GastoController extends AbstractController
         Request $request
     ): JsonResponse {
         $id = $request->request->get('id');
+        $abono = $request->request->get('abono');
         $movimiento = $request->request->get('movimiento');
         $gasto = $gastoRepository->findOneBy(['id' => $id]);
         if ($gasto instanceof Gasto) {
-            $gasto->setTipoMivimiento($movimiento);
-            $gasto->setFechacreate();
-           $gastoRepository->guardar($gasto);
+            if ($abono > 0 && $abono < $gasto->getPrecio()) {
+                $nuevo_precio = $gasto->getPrecio() - $abono;
+                $gasto->setPrecio($nuevo_precio);
+                $nuevo_gasto = new Gasto;
+                $nuevo_gasto->setDetalle($gasto->getDetalle() . ' - abono');
+                $nuevo_gasto->setPrecio($abono);
+                $nuevo_gasto->setTipoMovimiento($movimiento);
+                $gastoRepository->guardar($nuevo_gasto);
+            } else {
+                $gasto->setTipoMovimiento($movimiento);
+                $gasto->setFechacreate();
+            }
+            $gastoRepository->guardar($gasto);
         }
-        return new JsonResponse(['movimiento'=>$gasto->getTipoMivimiento()], 200, ['Content-Type' => 'application/json']);
+        return new JsonResponse(['movimiento' => $movimiento], 200, ['Content-Type' => 'application/json']);
     }
 }

@@ -16,16 +16,18 @@
 			<table class="table table-sm" id="table_resumen" data-toggle="table" data-url="{{path('app_get_informe_resumen_all')}}" data-show-refresh="true" data-buttons="buttons">
 				<thead>
 					<tr>
-						<th colspan="7" class="text-center bg-dark text-white">Resumen</th>
+						<th colspan="10" class="text-center bg-dark text-white">Resumen</th>
 					</tr>
 					<tr>
-
-						<th data-field="total_venta" data-formatter="formatoResumen">total_venta</th>
-						<th data-field="total_gasto" data-formatter="formatoResumen">total_gasto</th>
-						<th data-field="total_inversion" data-formatter="formatoResumen">total_inversion</th>
-						<th data-field="total_utilidad" data-formatter="formatoResumen">total_utilidad</th>
-            			<th data-field="activos_circulantes" data-formatter="formatoResumen">activos_circulantes</th>
-						<th data-field="total_cierre" data-formatter="formatoResumen">total_cierre</th>
+						<th data-field="total_venta" data-formatter="formatoResumen">venta</th>
+						<th data-field="total_gasto" data-formatter="formatoResumen">gasto</th>
+						<th data-field="total_inversion" data-formatter="formatoResumen">inversion</th>
+						<th data-field="total_utilidad" data-formatter="formatoResumen">utilidad</th>
+            			<th data-field="activos_circulantes" data-formatter="formatoResumen">inventario</th>
+						<th data-field="total_cierre" data-formatter="formatoResumen">cierre_mes</th>
+						<th data-field="total_credito" data-formatter="formatoResumen">credito</th>
+						<th data-field="total_prestamo" data-formatter="formatoResumen">prestamo</th>
+						<th data-field="total_deuda" data-formatter="formatoResumen">deuda</th>
 						<th data-field="caja" data-formatter="formatoResumenCaja">caja</th>
             
 					</tr>
@@ -156,9 +158,9 @@ parseInt(value).toLocaleString('es-ES')
 }</b>`
 }
 function formatoResumenCaja(value, row, index) {
-return `<b>${
-(parseInt(value) + parseInt(row.total_cierre) - (parseInt(row.total_gasto) + parseInt(row.total_inversion))).toLocaleString('es-ES')
-}</b>`
+const valor_positivo = parseInt(value) + parseInt(row.total_cierre) +  parseInt(row.total_credito);	
+const valor_negativo = parseInt(row.total_gasto) + parseInt(row.total_inversion) + parseInt(row.total_prestamo)
+return `<b>${(valor_positivo - valor_negativo).toLocaleString('es-ES')}</b>`
 }
 function sumaPedidos(data) {
 return '$' + data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0).toLocaleString('es-ES');

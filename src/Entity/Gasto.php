@@ -27,7 +27,7 @@ class Gasto
     private \DateTime $fechaupdate;
 
     #[ORM\Column(length: 255,nullable: true)]
-    private ?string $tipomivimiento = null;
+    private ?string $tipomovimiento = null;
 
     #[ORM\Column]
     private ?bool $cancelado = false;
@@ -84,14 +84,14 @@ class Gasto
         $this->fechaupdate = new \DateTime();
     }
 
-    public function getTipoMivimiento(): ?string
+    public function getTipoMovimiento(): ?string
     {
-        return $this->tipomivimiento;
+        return $this->tipomovimiento;
     }
 
-    public function setTipoMivimiento(string $tipo_mivimiento): static
+    public function setTipoMovimiento(string $tipo_mivimiento): static
     {
-        $this->tipomivimiento = $tipo_mivimiento;
+        $this->tipomovimiento = $tipo_mivimiento;
 
         return $this;
     }

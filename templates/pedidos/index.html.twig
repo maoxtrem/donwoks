@@ -80,7 +80,12 @@ method: 'POST',
 body: formData
 });
 const datos = await respuesta.json();
-let html = ['<ul class="list-group">'];
+let tr = [];
+for (const dato of datos.rows) {
+ tr.push(`<tr><td class="text-center fs-5">${dato.name}</td></tr>`);
+}
+ tr.push('</tbody> </table>');
+/*let html = ['<ul class="list-group">'];
 for (const dato of datos.rows) {
 html.push (`<li class="list-group-item">- ${
 dato.name
@@ -88,7 +93,17 @@ dato.name
 }
 html.push('</ul>');
 index[0].innerHTML = html.join('');
-
+*/
+index[0].innerHTML = [
+  `<table class="table table-sm table-hover table-borderless">`,
+  '  <thead class="table-dark">',
+  '    <tr>',
+  `      <th class="text-center fs-4">Detalles del pedido [${row.id}]</th>`,
+  '    </tr>',
+  '  </thead>',
+  '  <tbody>',
+   ...tr
+].join('');
 return;
 }
 function total() {

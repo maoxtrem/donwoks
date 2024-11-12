@@ -34,12 +34,12 @@ class GastoRepository extends ServiceEntityRepository
                 'p.fechacreate fecha',
                 'p.detalle detalle',
                 'p.precio precio',
-                'p.tipomivimiento tipo_movimiento'
+                'p.tipomovimiento tipo_movimiento'
             )
             ->andWhere("DATE(p.fechacreate) = DATE(:hoy)")
             ->andWhere('p.precio != 0')
             ->setParameter('hoy', $this->hoy);
-        $movimiento && $SQL->andWhere('p.tipomivimiento = :movimiento')
+        $movimiento && $SQL->andWhere('p.tipomovimiento = :movimiento')
             ->setParameter('movimiento', $movimiento);
         return $SQL->getQuery()
             ->getArrayResult();
@@ -53,13 +53,15 @@ class GastoRepository extends ServiceEntityRepository
                 'p.fechacreate fecha',
                 'p.detalle detalle',
                 'p.precio precio',
-                'p.tipomivimiento tipo_movimiento'
+                'p.tipomovimiento tipo_movimiento',
+                '0 abono'
+
             )
             ->andWhere('p.precio != 0')
             ->andWhere('p.cancelado = 0')
             ;
       
-        $movimiento && $SQL->andWhere('p.tipomivimiento = :movimiento')
+        $movimiento && $SQL->andWhere('p.tipomovimiento = :movimiento')
             ->setParameter('movimiento', $movimiento);
         return $SQL->getQuery()
             ->getArrayResult();
@@ -75,10 +77,10 @@ class GastoRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')
             ->select(
                 "DATE(p.fechacreate) fecha",
-                "SUM(CASE WHEN p.tipomivimiento = 'gasto' THEN p.precio ELSE 0 END) total_gasto",
-                "SUM(CASE WHEN p.tipomivimiento = 'inversion' THEN p.precio ELSE 0 END) total_inversion"
+                "SUM(CASE WHEN p.tipomovimiento = 'gasto' THEN p.precio ELSE 0 END) total_gasto",
+                "SUM(CASE WHEN p.tipomovimiento = 'inversion' THEN p.precio ELSE 0 END) total_inversion"
             )
-            ->andWhere("p.tipomivimiento IN ('gasto', 'inversion')")
+            ->andWhere("p.tipomovimiento IN ('gasto', 'inversion')")
             ->andWhere("DATE_FORMAT(p.fechacreate, '%Y-%m') = :fecha")
             ->setParameter('fecha', $this->hoy->format('Y-m'))
             ->addGroupBy('fecha')
@@ -94,7 +96,7 @@ class GastoRepository extends ServiceEntityRepository
                 "DATE(p.fechacreate) fecha",
                 "SUM(p.precio)  gastos"
             )
-            ->andWhere("p.tipomivimiento = 'gasto'")
+            ->andWhere("p.tipomovimiento = 'gasto'")
             ->andWhere("DATE_FORMAT(p.fechacreate, '%Y-%m') = :fecha")
             ->setParameter('fecha', $this->hoy->format('Y-m'))
             ->addGroupBy('fecha')
@@ -110,7 +112,7 @@ class GastoRepository extends ServiceEntityRepository
                 "DATE(p.fechacreate) fecha",
                 "SUM(p.precio)  inversion"
             )
-            ->andWhere("p.tipomivimiento = 'inversion'")
+            ->andWhere("p.tipomovimiento = 'inversion'")
             ->andWhere("DATE_FORMAT(p.fechacreate, '%Y-%m') = :fecha")
             ->setParameter('fecha', $this->hoy->format('Y-m'))
             ->addGroupBy('fecha')
@@ -131,7 +133,7 @@ class GastoRepository extends ServiceEntityRepository
     public function fixFecha(string $movimiento): ?Gasto
     {
         $SQL = $this->createQueryBuilder('p')
-            ->andWhere("p.tipomivimiento = :movimiento")
+            ->andWhere("p.tipomovimiento = :movimiento")
             ->setParameter('movimiento', $movimiento)
             ->andWhere("DATE(p.fechacreate) = DATE(:hoy)")
             ->setParameter('hoy', $this->hoy)
