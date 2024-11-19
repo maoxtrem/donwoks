@@ -5,188 +5,245 @@
 
 {% block body %}
 
-	<div class="container pb-5">
+<div class="container pb-5">
 
-		<div class="d-grid gap-3 mt-3">
-			<canvas id="lineChart" style="max-height: 400px;"></canvas>
-		</div>
+<div class="d-flex gap-3 mt-3">
+  <div style="flex: 6; max-height: 400px;">
+    <canvas id="lineChart"></canvas>
+  </div>
+  <div style="flex: 4; max-height: 400px;">
+    <canvas id="lineChartPromedio"></canvas>
+  </div>
+</div>
 
+	<div class="d-grid gap-3 mt-3">
+		<table class="table table-sm" id="table_resumen" data-toggle="table"
+			data-url="{{path('app_get_informe_resumen_all')}}" data-show-refresh="true" data-buttons="buttons">
+			<thead>
+				<tr>
+					<th colspan="10" class="text-center bg-dark text-white">Resumen</th>
+				</tr>
+				<tr>
+					<th data-field="total_venta" data-formatter="formatoResumen">venta</th>
+					<th data-field="total_gasto" data-formatter="formatoResumen">gasto</th>
+					<th data-field="total_inversion" data-formatter="formatoResumen">inversion</th>
+					<th data-field="total_utilidad" data-formatter="formatoResumen">utilidad</th>
+					<th data-field="activos_circulantes" data-formatter="formatoResumen">inventario</th>
+					<th data-field="total_cierre" data-formatter="formatoResumen">cierre_mes</th>
+					<th data-field="total_credito" data-formatter="formatoResumen">credito</th>
+					<th data-field="total_prestamo" data-formatter="formatoResumen">prestamo</th>
+					<th data-field="total_deuda" data-formatter="formatoResumen">deuda</th>
+					<th data-field="caja" data-formatter="formatoResumenCaja">caja</th>
 
-		<div class="d-grid gap-3 mt-3">
-			<table class="table table-sm" id="table_resumen" data-toggle="table" data-url="{{path('app_get_informe_resumen_all')}}" data-show-refresh="true" data-buttons="buttons">
-				<thead>
-					<tr>
-						<th colspan="10" class="text-center bg-dark text-white">Resumen</th>
-					</tr>
-					<tr>
-						<th data-field="total_venta" data-formatter="formatoResumen">venta</th>
-						<th data-field="total_gasto" data-formatter="formatoResumen">gasto</th>
-						<th data-field="total_inversion" data-formatter="formatoResumen">inversion</th>
-						<th data-field="total_utilidad" data-formatter="formatoResumen">utilidad</th>
-            			<th data-field="activos_circulantes" data-formatter="formatoResumen">inventario</th>
-						<th data-field="total_cierre" data-formatter="formatoResumen">cierre_mes</th>
-						<th data-field="total_credito" data-formatter="formatoResumen">credito</th>
-						<th data-field="total_prestamo" data-formatter="formatoResumen">prestamo</th>
-						<th data-field="total_deuda" data-formatter="formatoResumen">deuda</th>
-						<th data-field="caja" data-formatter="formatoResumenCaja">caja</th>
-            
-					</tr>
-				</thead>
-			</table>
-		</div>
-		<div class="d-grid gap-3 mt-3">
-			<table class="table table-sm" id="table_venta" data-toggle="table" data-fixed-scroll="true" data-show-footer="true" data-url="{{path('app_get_informe_pedidos_all')}}" data-height="500" data-show-refresh="true">
-				<thead>
-					<tr>
-						<th colspan="5" class="text-center bg-dark text-white">VENTAS</th>
-					</tr>
-					<tr>
-						<th data-field="fecha" data-footer-formatter="total">fecha</th>
-						<th data-field="metodo_pago">Metodo Pago</th>
-						<th data-field="total_precio" data-footer-formatter="sumaPedidos" data-formatter="formatoNumbre">total_precio</th>
-						<th data-field="total_utilidad" data-footer-formatter="sumaPedidos" data-formatter="formatoNumbre">total_utilidad</th>
-						<th data-field="total_pedidos" data-footer-formatter="suma">total pedidos</th>
-					</tr>
-				</thead>
-			</table>
-		</div>
-		<div class="d-grid gap-3 mt-3">
-			<table class="table table-sm" id="table_gastos_inversion" data-toggle="table" data-fixed-scroll="true" data-show-footer="true" data-url="{{path('app_get_informe_gastos_inversion_all')}}">
-				<thead>
-					<tr>
-						<th colspan="3" class="text-center bg-dark text-white">INFORME DE GASTOS E INVERSION</th>
-					</tr>
-					<tr>
-						<th data-field="fecha" data-footer-formatter="total">Fecha</th>
-						<th data-field="total_gasto" data-footer-formatter="sumaPedidos" data-formatter="formatoNumbre">Gastos</th>
-						<th data-field="total_inversion" data-footer-formatter="sumaPedidos" data-formatter="formatoNumbre">Inversión</th>
-					</tr>
-				</thead>
-			</table>
-		</div>
-		<div class="d-grid gap-3 mt-3">
-			<table class="table table-sm" id="table_inventario" data-toggle="table" data-fixed-scroll="true" data-url="{{path('app_get_informe_inventario_all')}}">
-				<thead>
-					<tr>
-						<th colspan="4" class="text-center bg-dark text-white">INVENTARIO</th>
-					</tr>
-					<tr>
-						<th data-field="nombre">Nombre</th>
-						<th data-field="medida">Medida</th>
-						<th data-field="cantidad_entrada">cantidad_entrada</th>
-						<th data-field="cantidad_salida">cantidad_salida</th>
-					</tr>
-				</thead>
-			</table>
-		</div>
+				</tr>
+			</thead>
+		</table>
 	</div>
-	<script>
+	<div class="d-grid gap-3 mt-3">
+		<table class="table table-sm" id="table_venta" data-toggle="table" data-fixed-scroll="true"
+			data-show-footer="true" data-url="{{path('app_get_informe_pedidos_all')}}" data-height="500"
+			data-show-refresh="true">
+			<thead>
+				<tr>
+					<th colspan="5" class="text-center bg-dark text-white">VENTAS</th>
+				</tr>
+				<tr>
+					<th data-field="fecha" data-footer-formatter="total">fecha</th>
+					<th data-field="metodo_pago">Metodo Pago</th>
+					<th data-field="total_precio" data-footer-formatter="sumaPedidos" data-formatter="formatoNumbre">
+						total_precio</th>
+					<th data-field="total_utilidad" data-footer-formatter="sumaPedidos" data-formatter="formatoNumbre">
+						total_utilidad</th>
+					<th data-field="total_pedidos" data-footer-formatter="suma">total pedidos</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div class="d-grid gap-3 mt-3">
+		<table class="table table-sm" id="table_gastos_inversion" data-toggle="table" data-fixed-scroll="true"
+			data-show-footer="true" data-url="{{path('app_get_informe_gastos_inversion_all')}}">
+			<thead>
+				<tr>
+					<th colspan="3" class="text-center bg-dark text-white">INFORME DE GASTOS E INVERSION</th>
+				</tr>
+				<tr>
+					<th data-field="fecha" data-footer-formatter="total">Fecha</th>
+					<th data-field="total_gasto" data-footer-formatter="sumaPedidos" data-formatter="formatoNumbre">
+						Gastos</th>
+					<th data-field="total_inversion" data-footer-formatter="sumaPedidos" data-formatter="formatoNumbre">
+						Inversión</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div class="d-grid gap-3 mt-3">
+		<table class="table table-sm" id="table_inventario" data-toggle="table" data-fixed-scroll="true"
+			data-url="{{path('app_get_informe_inventario_all')}}">
+			<thead>
+				<tr>
+					<th colspan="4" class="text-center bg-dark text-white">INVENTARIO</th>
+				</tr>
+				<tr>
+					<th data-field="nombre">Nombre</th>
+					<th data-field="medida">Medida</th>
+					<th data-field="cantidad_entrada">cantidad_entrada</th>
+					<th data-field="cantidad_salida">cantidad_salida</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+<script>
 
 
-		document.addEventListener("DOMContentLoaded", async () => {
-const {
-fecha,
-ventas,
-gastos,
-inversion,
-utilidad,
-costo
-} = await get_data_grafic();
-new Chart(document.querySelector('#lineChart'), {
-type: 'line',
-data: {
-labels: fecha,
-datasets: [
-{
-label: 'ventas',
-data: ventas,
-fill: false,
-borderColor: 'rgb(0, 255, 0)',
-tension: 0.1
-},
-{
-label: 'inversion',
-data: inversion,
-fill: false,
-borderColor: 'rgb(0, 0, 255)',
-tension: 0.1
-},
-{
-label: 'gastos',
-data: gastos,
-fill: false,
-borderColor: 'rgb(255, 0, 0)',
-tension: 0.1
-},
-{
-label: 'utilidad',
-data: utilidad,
-fill: false,
-borderColor: 'rgb( 200,255, 0)',
-tension: 0.1
-}, {
-label: 'costo',
-data: costo,
-fill: false,
-borderColor: 'rgb( 200,55, 100)',
-tension: 0.1
-}
-]
-}
+	document.addEventListener("DOMContentLoaded", async () => {
+await graficarInforme();
+
+
 });
-});
+
+	async function graficarInforme() {
+		const { fecha, ventas, gastos, inversion, utilidad, costo } = await get_data_grafic();
+		new Chart(document.querySelector('#lineChart'), {
+			type: 'line',
+			data: {
+				labels: fecha,
+				datasets: [
+					{
+						label: 'ventas',
+						data: ventas,
+						fill: false,
+						borderColor: 'rgb(0, 255, 0)',
+						tension: 0.1
+					},
+					{
+						label: 'inversion',
+						data: inversion,
+						fill: false,
+						borderColor: 'rgb(0, 0, 255)',
+						tension: 0.1
+					},
+					{
+						label: 'gastos',
+						data: gastos,
+						fill: false,
+						borderColor: 'rgb(255, 0, 0)',
+						tension: 0.1
+					},
+					{
+						label: 'utilidad',
+						data: utilidad,
+						fill: false,
+						borderColor: 'rgb( 200,255, 0)',
+						tension: 0.1
+					}, {
+						label: 'costo',
+						data: costo,
+						fill: false,
+						borderColor: 'rgb( 200,55, 100)',
+						tension: 0.1
+					}
+				]
+			}
+		});
+ 		new Chart(document.querySelector('#lineChartPromedio'), {
+			type: 'bar',
+			data: {
+				labels: ['promedio'],
+				datasets: [
+					{
+						label: 'ventas',
+						data: promedio(ventas),
+						fill: false,
+						backgroundColor: 'rgb(0, 255, 0)',
+						tension: 0.1
+					},
+					{
+						label: 'inversion',
+						data: promedio(inversion),
+						fill: false,
+						backgroundColor: 'rgb(0, 0, 255)',
+						tension: 0.1
+					},
+					{
+						label: 'gastos',
+						data: promedio(gastos),
+						fill: false,
+						backgroundColor: 'rgb(255, 0, 0)',
+						tension: 0.1
+					},
+					{
+						label: 'utilidad',
+						data: promedio(utilidad),
+						fill: false,
+						backgroundColor: 'rgb( 200,255, 0)',
+						tension: 0.1
+					}, {
+						label: 'costo',
+						data: promedio(costo),
+						fill: false,
+						backgroundColor: 'rgb( 200,55, 100)',
+						tension: 0.1
+					}
+				]
+			}
+		});
+	}
 
 
-async function get_data_grafic() {
-const respuesta = await fetch("{{ path('app_get_data_grafic') }}", {
-method: 'POST',
-body: new FormData()
-});
-return await respuesta.json();
+	async function get_data_grafic() {
+		const respuesta = await fetch("{{ path('app_get_data_grafic') }}", {
+			method: 'POST',
+			body: new FormData()
+		});
+		return await respuesta.json();
+	}
+
+function promedio(arr) {
+  return [Math.floor(arr.reduce((a, b) => a + parseFloat(b), 0) / arr.length)];
 }
 
-function total() {
-return "TOTAL"
-}
+	function total() {
+		return "TOTAL"
+	}
 
-function formatoNumbre(value, row, index) {
-return parseInt(value).toLocaleString('es-ES')
-}
-function formatoResumen(value, row, index) {
-return `<b>${
-parseInt(value).toLocaleString('es-ES')
-}</b>`
-}
-function formatoResumenCaja(value, row, index) {
-const valor_positivo = parseInt(value) + parseInt(row.total_cierre) +  parseInt(row.total_credito);	
-const valor_negativo = parseInt(row.total_gasto) + parseInt(row.total_inversion) + parseInt(row.total_prestamo)
-return `<b>${(valor_positivo - valor_negativo).toLocaleString('es-ES')}</b>`
-}
-function sumaPedidos(data) {
-return '$' + data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0).toLocaleString('es-ES');
-}
-function suma(data) {
-return data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0);
-}
+	function formatoNumbre(value, row, index) {
+		return parseInt(value).toLocaleString('es-ES')
+	}
+	function formatoResumen(value, row, index) {
+		return `<b>${parseInt(value).toLocaleString('es-ES')
+			}</b>`
+	}
+	function formatoResumenCaja(value, row, index) {
+		const valor_positivo = parseInt(value) + parseInt(row.total_cierre) + parseInt(row.total_credito);
+		const valor_negativo = parseInt(row.total_gasto) + parseInt(row.total_inversion) + parseInt(row.total_prestamo)
+		return `<b>${(valor_positivo - valor_negativo).toLocaleString('es-ES')}</b>`
+	}
+	function sumaPedidos(data) {
+		return '$' + data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0).toLocaleString('es-ES');
+	}
+	function suma(data) {
+		return data.map(row => + row[this.field]).reduce((sum, i) => sum + i, 0);
+	}
 
-function buttons() {
-return {
-btnVerPedidos: {
-html: '<a href="     {{ path('app_pedidos') }}" class="btn btn-danger">ver pedidos</a>'
+	function buttons() {
+		return {
+			btnVerPedidos: {
+				html: '<a href="     {{ path('app_pedidos') }}" class="btn btn-danger">ver pedidos</a>'
 },
-btnHacerPedido: {
-html: '<a href="     {{ path('app_pedido') }}" class="btn btn-danger">hacer pedido</a>'
+			btnHacerPedido: {
+				html: '<a href="     {{ path('app_pedido') }}" class="btn btn-danger">hacer pedido</a>'
 },
-btnGastos: {
-html: '<a href="     {{ path('app_gasto') }}" class="btn btn-danger">Caja</a>'
+			btnGastos: {
+				html: '<a href="     {{ path('app_gasto') }}" class="btn btn-danger">Caja</a>'
 },
-btnInventario: {
-html: '<a href="     {{ path('app_inventario') }}" class="btn btn-danger">inventario</a>'
+			btnInventario: {
+				html: '<a href="     {{ path('app_inventario') }}" class="btn btn-danger">inventario</a>'
 },
-btnInforme: {
-html: '<a class="btn btn-warning">informe</a>'
-}
-}
-}
-	</script>
+			btnInforme: {
+				html: '<a class="btn btn-warning">informe</a>'
+			}
+		}
+	}
+</script>
 {% endblock %}

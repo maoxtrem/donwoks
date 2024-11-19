@@ -104,4 +104,5 @@ class InformesController extends AbstractController
         $json['inversion']=array_column($gastoRepository->get_inversion_all(), 'inversion');
         return new JsonResponse( $json);
     }
+   
 }
