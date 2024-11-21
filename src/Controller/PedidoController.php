@@ -55,14 +55,17 @@ class PedidoController extends AbstractController
             'puntos' => $puntos
         ]]);
     }
-    #[Route('/pedidos', name: 'app_pedidos')]
+
+   #[Route('/pedidos', name: 'app_pedidos')]
     public function pedidos(): Response
     {
-
-      
         return $this->render('pedidos/index.html.twig', ['ip_server' => explode(':', $_SERVER['HTTP_HOST'])[0]]);
+    } 
+    #[Route('/pedidos_clientes', name: 'app_pedidos_clientes')]
+    public function pedidos_clientes(): Response
+    {
+        return $this->render('pedidos_clientes/index.html.twig', ['ip_server' => explode(':', $_SERVER['HTTP_HOST'])[0]]);
     }
-
 
     #[Route('/get_pedidos', name: 'app_get_pedidos')]
     public function get_pedidos(PedidoRepository $pedidoRepository): JsonResponse
