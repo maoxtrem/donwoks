@@ -7,15 +7,6 @@
 
 <div class="container pb-5">
 
-<div class="d-flex gap-3 mt-3">
-  <div style="flex: 6; max-height: 400px;">
-    <canvas id="lineChart"></canvas>
-  </div>
-  <div style="flex: 4; max-height: 400px;">
-    <canvas id="lineChartPromedio"></canvas>
-  </div>
-</div>
-
 	<div class="d-grid gap-3 mt-3">
 		<table class="table table-sm" id="table_resumen" data-toggle="table"
 			data-url="{{path('app_get_informe_resumen_all')}}" data-show-refresh="true" data-buttons="buttons">
@@ -39,6 +30,21 @@
 			</thead>
 		</table>
 	</div>
+<div class="d-flex gap-3 mt-3">
+
+    <canvas id="lineChart"  height="70"></canvas>
+
+</div>
+<div class="d-flex gap-3 mt-3">
+  <div style="flex: 5; max-height: 400px;">
+    <canvas id="lineChartPromedioSemana"></canvas>
+  </div>
+  <div style="flex: 5; max-height: 400px;">
+    <canvas id="lineChartPromedio"></canvas>
+  </div>
+</div>
+
+
 	<div class="d-grid gap-3 mt-3">
 		<table class="table table-sm" id="table_venta" data-toggle="table" data-fixed-scroll="true"
 			data-show-footer="true" data-url="{{path('app_get_informe_pedidos_all')}}" data-height="500"
@@ -188,6 +194,48 @@ await graficarInforme();
 				]
 			}
 		});
+		 		new Chart(document.querySelector('#lineChartPromedioSemana'), {
+			type: 'bar',
+			data: {
+				labels: ['lunes','martes','miercoles','jueves','viernes','sabado','domingo'],
+				datasets: [
+					{
+						label: 'ventas',
+						data: promedioSemana(fecha,ventas),
+						fill: false,
+						backgroundColor: 'rgb(0, 255, 0)',
+						tension: 0.1
+					},
+					{
+						label: 'inversion',
+						data: promedioSemana(fecha,inversion),
+						fill: false,
+						backgroundColor: 'rgb(0, 0, 255)',
+						tension: 0.1
+					},
+					{
+						label: 'gastos',
+						data: promedioSemana(fecha,gastos),
+						fill: false,
+						backgroundColor: 'rgb(255, 0, 0)',
+						tension: 0.1
+					},
+					{
+						label: 'utilidad',
+						data: promedioSemana(fecha,utilidad),
+						fill: false,
+						backgroundColor: 'rgb( 200,255, 0)',
+						tension: 0.1
+					}, {
+						label: 'costo',
+						data: promedioSemana(fecha,costo),
+						fill: false,
+						backgroundColor: 'rgb( 200,55, 100)',
+						tension: 0.1
+					}
+				]
+			}
+		});
 	}
 
 
@@ -201,6 +249,15 @@ await graficarInforme();
 
 function promedio(arr) {
   return [Math.floor(arr.reduce((a, b) => a + parseFloat(b), 0) / arr.length)];
+}
+
+function promedioSemana(fechas, data) {
+  const diasSemana = Array(7).fill().map(() => []);
+  fechas.forEach((fecha, indice) => {
+    const diaSemana = new Date(fecha).getDay();
+    diasSemana[diaSemana].push(data[indice]);
+  });
+  return diasSemana.map(dia => promedio(dia)[0]);
 }
 
 	function total() {

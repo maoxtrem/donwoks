@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class InventarioRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private \DateTime $hoy = new \DateTime())
     {
         parent::__construct($registry, Inventario::class);
     }
@@ -39,6 +39,8 @@ class InventarioRepository extends ServiceEntityRepository
                 '0 AS new_cantidad',
                 '0 AS add_cantidad'
             )
+            ->andWhere("DATE(p.fechaupdate) != DATE(:hoy)")
+            ->setParameter('hoy', $this->hoy)
             //->addOrderBy('fecha','ASC')
             ->addOrderBy('minimo','ASC');
 

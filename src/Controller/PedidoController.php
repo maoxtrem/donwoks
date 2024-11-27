@@ -129,6 +129,27 @@ class PedidoController extends AbstractController
         $this->ratchetClient->send('pedido procesado');
         return new JsonResponse();
     }
+    #[Route('/procesar_todos_pedido', name: 'app_procesar_todos_pedido')]
+    public function procesar_todos_pedido(
+        PedidoRepository $pedidoRepository,
+        Request $request
+    ): JsonResponse {
+ 
+        $pedidos = $pedidoRepository->get_pedidos();
+
+        foreach ($pedidos as $item) {
+            if($item['estado']>0){
+                 $pedido = $pedidoRepository->find($item['id']);
+                 $pedido->finalEstado();
+                $pedidoRepository->guardar($pedido);
+            }
+           
+        }
+        dd($pedidos);
+        //$pedidoRepository->guardar($pedido);
+       // $this->ratchetClient->send('pedido procesado');
+        return new JsonResponse();
+    }
     #[Route('/pedir', name: 'app_pedir')]
     public function pedir(
         PedidoRepository $pedidoRepository,
