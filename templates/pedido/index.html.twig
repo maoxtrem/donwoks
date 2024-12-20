@@ -4,237 +4,252 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container mt-2">
+    <div class="container mt-2">
+        <form class="row border rounded shadow-sm p-3">
+            <div class="col-auto">
+                <label for="cliente" class="visually-hidden">Cliente</label>
+                <input type="number" name="cliente" id="cliente" class="form-control" id="cliente" placeholder="cliente"
+                       required value="{{ cliente.code }}">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Ver puntos</button>
+            </div>
+            <div class="col-auto">
+                <a href="{{ path('app_pedido') }}" class="btn btn-danger">Reset</a>
+            </div>
 
-
-		<form class="row border rounded shadow-sm p-3">
-			<div class="col-auto">
-				<label for="cliente" class="visually-hidden">Cliente</label>
-				<input type="number" name="cliente" id="cliente" class="form-control" id="cliente" placeholder="cliente" required value="{{cliente.code}}">
-			</div>
-			<div class="col-auto">
-				<button type="submit" class="btn btn-primary">Ver puntos</button>
-			</div>
-			<div class="col-auto">
-				<a href="{{path('app_pedido')}}" class="btn btn-danger">Reset</a>
-			</div>
-	
-			<div class="col-auto ms-auto d-flex align-items-center">
+            <div class="col-auto ms-auto d-flex align-items-center">
 				<span class="border px-2 py-1 rounded shadow-sm">Cliente:
-					{{cliente.code}}</span>
-			</div>
-			<div class="col-auto d-flex align-items-center">
-				<span class="border px-2 py-1 mx-1 rounded shadow-sm">Puntos:</span>
-				<input id="puntos" type="text" class="form-control shadow-sm text-success" readonly value="{{cliente.puntos}}">
-			</div>
-		</form>
+					{{ cliente.code }}</span>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+                <span class="border px-2 py-1 mx-1 rounded shadow-sm">Puntos:</span>
+                <input id="puntos" type="text" class="form-control shadow-sm text-success" readonly
+                       value="{{ cliente.puntos }}">
+            </div>
+        </form>
 
-		<div class="row mt-3">
-			<div class="col-md-6" style="overflow-y: auto; height: 720px;">
-				<h2 class="mb-4 text-center fw-bold text-primary">Selecionar productos</h2>
-				<div class="accordion" id="accordionMenu">
-					{% for grupo in grupos %}
-						<div class="accordion-item ">
-							<h2 class="accordion-header">
-								<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{grupo.id}}" aria-expanded="false" aria-controls="collapse_{{grupo.id}}">
-									{{grupo.nombre | upper}}
-								</button>
-							</h2>
-							<div id="collapse_{{grupo.id}}" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">
-								<div class="accordion-body">
-									{% for producto in productos %}
-										{% if producto.grupo == grupo %}
-											<div class="col-md-12">
-												<a href="javascript:void(0)" class="text-decoration-none" onclick="insert({id_producto:{{producto.id}},name:'{{producto.nombre}}',price:'${{producto.precio}}',id_grupo:{{producto.grupo.id}},puntos:{{producto.puntos}}});">
-													<div class="card m-1">
-														<div class="card-body bg-{{producto.color}}">
-															<div class="d-flex align-items-center justify-content-between">
-																<div>
-																	<h6 class="fs-4">{{producto.nombre | upper}}</h6>
-																	<span class="text-muted small pt-2 ps-1 fs-2">
+        <div class="row mt-3">
+            <div class="col-md-6" style="overflow-y: auto; height: 720px;">
+                <h2 class="mb-4 text-center fw-bold text-primary">Selecionar productos</h2>
+                <div class="accordion" id="accordionMenu">
+                    {% for grupo in grupos %}
+                        <div class="accordion-item ">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapse_{{ grupo.id }}" aria-expanded="false"
+                                        aria-controls="collapse_{{ grupo.id }}">
+                                    {{ grupo.nombre | upper }}
+                                </button>
+                            </h2>
+                            <div id="collapse_{{ grupo.id }}" class="accordion-collapse collapse"
+                                 data-bs-parent="#accordionMenu">
+                                <div class="accordion-body">
+                                    {% for producto in productos %}
+                                        {% if producto.grupo == grupo %}
+                                            <div class="col-md-12">
+                                                <a href="javascript:void(0)" class="text-decoration-none"
+                                                   onclick="insert({id_producto:{{ producto.id }},name:'{{ producto.nombre }}',price:'${{ producto.precio }}',id_grupo:{{ producto.grupo.id }},puntos:{{ producto.puntos }}});">
+                                                    <div class="card m-1">
+                                                        <div class="card-body bg-{{ producto.color }}">
+                                                            <div class="d-flex align-items-center justify-content-between">
+                                                                <div>
+                                                                    <h6 class="fs-4">{{ producto.nombre | upper }}</h6>
+                                                                    <span class="text-muted small pt-2 ps-1 fs-2">
 																		{% if grupo.id != 8 %}
-																			${{producto.precio | number_format}}
-																		{% else %}
-																			Puntos:
-																			{{producto.puntos | number_format}}
-																		{% endif %}
+                                                                            ${{ producto.precio | number_format }}
+                                                                        {% else %}
+                                                                            Puntos:
+                                                                            {{ producto.puntos | number_format }}
+                                                                        {% endif %}
 																	</span>
-																	{% if grupo.id != 8 %}
-																		<span class="text-muted small pt-2 ps-1 fs-6">
-																			Recibes:  {{(producto.precio - producto.costo)*0.1}} Pts.
+                                                                    {% if grupo.id != 8 %}
+                                                                        <span class="text-muted small pt-2 ps-1 fs-6">
+																			Recibes:  {{ (producto.precio - producto.costo)*0.1 }} Pts.
 																		</span>
-																	{% endif %}
-																</div>
-																<div class="card-icon rounded-circle d-flex align-items-center justify-content-center ms-auto bg-white" style="width: 40px; height: 40px;">
+                                                                    {% endif %}
+                                                                </div>
+                                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center ms-auto bg-white"
+                                                                     style="width: 40px; height: 40px;">
 
-																	<i class="bi bi-plus text-{{producto.color}}"></i>
+                                                                    <i class="bi bi-plus text-{{ producto.color }}"></i>
 
-																</div>
-															</div>
-														</div>
-													</div>
-												</a>
-											</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
 
-										{% endif %}
-									{% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
 
-								</div>
-							</div>
-						</div>
-					{% endfor %}
-				</div>
-			</div>
-			<div class="col-md-6">
-				<h2 class="mb-4 text-center text-primary fw-bold">Pedido</h2>
-				<table class="table table-sm" id="table" data-toggle="table" data-fixed-scroll="true" data-show-footer="true" data-height="350" data-buttons="buttons">
-					<thead>
-						<tr>
-							<th data-field="id" data-visible="false">id</th>
-							<th data-field="id_grupo" data-visible="false">id_grupo</th>
-							<th data-field="id_producto" data-visible="false">id_producto</th>
-							<th data-field="puntos" data-visible="false">puntos</th>
-							<th data-field="name" data-footer-formatter="total">Nombre</th>
-							<th data-field="price" data-footer-formatter="suma">Precio</th>
-							<th data-align="center" data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">
-								accion</th>
-						</tr>
-					</thead>
-				</table>
-				<form id="form_pedido" class="px-4 py-3 border rounded shadow-sm mb-5 mt-1">
-					<div class="row">
-						<label class="form-label fw-bold">Lugar de entrega</label>
-						<div class="col-auto">
-							<div class="form-check">
-								<input class="form-check-input" type="radio" name="lugar" id="lugar-llevar" value="llevar" checked>
-								<label class="form-check-label" for="lugar-llevar">LLEVAR</label>
-							</div>
-						</div>
-						<div class="col-auto">
-							<div class="form-check">
-								<input class="form-check-input" type="radio" name="lugar" id="lugar-mesa" value="mesa">
-								<label class="form-check-label" for="lugar-mesa">MESA</label>
-							</div>
-						</div>
-						<div class="col-auto">
-							<div class="form-check">
-								<input class="form-check-input" type="radio" name="lugar" id="lugar-domicilio" value="domicilio">
-								<label class="form-check-label" for="lugar-domicilio">DOMICLIO</label>
-							</div>
-						</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h2 class="mb-4 text-center text-primary fw-bold">Pedido</h2>
+                <table class="table table-sm" id="table" data-toggle="table" data-fixed-scroll="true"
+                       data-show-footer="true" data-height="350" data-buttons="buttons">
+                    <thead>
+                    <tr>
+                        <th data-field="id" data-visible="false">id</th>
+                        <th data-field="id_grupo" data-visible="false">id_grupo</th>
+                        <th data-field="id_producto" data-visible="false">id_producto</th>
+                        <th data-field="puntos" data-visible="false">puntos</th>
+                        <th data-field="name" data-footer-formatter="total">Nombre</th>
+                        <th data-field="price" data-footer-formatter="suma">Precio</th>
+                        <th data-align="center" data-field="operate" data-formatter="operateFormatter"
+                            data-events="operateEvents">
+                            accion
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+                <form id="form_pedido" class="px-4 py-3 border rounded shadow-sm mb-5 mt-1">
+                    <div class="row">
+                        <label class="form-label fw-bold">Lugar de entrega</label>
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="lugar" id="lugar-llevar"
+                                       value="llevar" checked>
+                                <label class="form-check-label" for="lugar-llevar">LLEVAR</label>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="lugar" id="lugar-mesa" value="mesa">
+                                <label class="form-check-label" for="lugar-mesa">MESA</label>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="lugar" id="lugar-domicilio"
+                                       value="domicilio">
+                                <label class="form-check-label" for="lugar-domicilio">DOMICLIO</label>
+                            </div>
+                        </div>
 
-					</div>
-					<div class="row mt-1">
-						<label class="form-label fw-bold">Método de pago</label>
-						<div class="col-auto">
-							<div class="form-check">
-								<input class="form-check-input" type="radio" name="metodo_pago" id="metodo-nequi" value="nequi">
-								<label class="form-check-label" for="metodo-nequi">Nequi</label>
-							</div>
-						</div>
-						<div class="col-auto">
-							<div class="form-check">
-								<input class="form-check-input" type="radio" name="metodo_pago" id="metodo-efectivo" value="efectivo" checked>
-								<label class="form-check-label" for="metodo-efectivo">Efectivo</label>
-							</div>
-						</div>
-					</div>
+                    </div>
+                    <div class="row mt-1">
+                        <label class="form-label fw-bold">Método de pago</label>
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="metodo_pago" id="metodo-nequi"
+                                       value="nequi">
+                                <label class="form-check-label" for="metodo-nequi">Nequi</label>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="metodo_pago" id="metodo-efectivo"
+                                       value="efectivo" checked>
+                                <label class="form-check-label" for="metodo-efectivo">Efectivo</label>
+                            </div>
+                        </div>
+                    </div>
 
-					<div class="mt-1">
-						<label for="observacion" class="form-label fw-bold">Observación</label>
-						<textarea class="form-control" id="observacion" name="observacion" rows="3"></textarea>
-					</div>
+                    <div class="mt-1">
+                        <label for="observacion" class="form-label fw-bold">Observación</label>
+                        <textarea class="form-control" id="observacion" name="observacion" rows="3"></textarea>
+                    </div>
 
-				</form>
+                </form>
 
-			</div>
-		</div>
-	</div>
-	<script>
-		const $table = $('#table');
+            </div>
+        </div>
+    </div>
+    <script>
+        const $table = $('#table');
 
-function insert(row) {
-let ids = $table.bootstrapTable('getData');
-row.id = ! ids.length ? 1 : Math.max.apply(Math, ids.map(o => o.id)) + 1;
-if (row.id_grupo == 8) {
-const puntos_cliente = document.querySelector('#puntos')
-if (row.puntos > puntos_cliente.value) {
-return false;
-}
-puntos_cliente.value -= row.puntos;
-}
-$table.bootstrapTable('insertRow', {
-index: 1,
-row: row
-})
-}
+        function insert(row) {
+            let ids = $table.bootstrapTable('getData');
+            row.id = !ids.length ? 1 : Math.max.apply(Math, ids.map(o => o.id)) + 1;
+            if (row.id_grupo == 8) {
+                const puntos_cliente = document.querySelector('#puntos')
+                if (row.puntos > puntos_cliente.value) {
+                    return false;
+                }
+                puntos_cliente.value -= row.puntos;
+            }
+            $table.bootstrapTable('insertRow', {
+                index: 1,
+                row: row
+            })
+        }
 
-function total() {
-return "TOTAL"
-}
-function suma(data) {
-return '$' + data.map(row => + row[this.field].substring(1)).reduce((sum, i) => sum + i, 0)
-}
-function operateFormatter(value, row, index) {
-return ['<a class="remove btn btn-danger btn-sm" href="javascript:void(0)" title="Remove">', '<i class="bi bi-trash"></i>', '</a>'].join('')
-}
-window.operateEvents = {
-'click .remove': function (e, value, row, index) {
-if (row.id_grupo == 8) {
-const puntos_cliente = document.querySelector('#puntos')
+        function total() {
+            return "TOTAL"
+        }
 
-puntos_cliente.value = + puntos_cliente.value + row.puntos;
-}
-$table.bootstrapTable('remove', {
-field: 'id',
-values: [row.id]
-})
-}
-}
+        function suma(data) {
+            return '$' + data.map(row => +row[this.field].substring(1)).reduce((sum, i) => sum + i, 0)
+        }
+
+        function operateFormatter(value, row, index) {
+            return ['<a class="remove btn btn-danger btn-sm" href="javascript:void(0)" title="Remove">', '<i class="bi bi-trash"></i>', '</a>'].join('')
+        }
+
+        window.operateEvents = {
+            'click .remove': function (e, value, row, index) {
+                if (row.id_grupo == 8) {
+                    const puntos_cliente = document.querySelector('#puntos')
+
+                    puntos_cliente.value = +puntos_cliente.value + row.puntos;
+                }
+                $table.bootstrapTable('remove', {
+                    field: 'id',
+                    values: [row.id]
+                })
+            }
+        }
 
 
-function buttons() {
-return {
-btnPedir: {
-html: '<button class="btn btn-primary" name="btnPedir">PEDIR</button>',
-event: async () => {
-const form_pedido = document.querySelector('#form_pedido');
-try {
-const data = $table.bootstrapTable('getData');
-if (! data.length) {
-return false
-}
-const cliente = document.querySelector('#cliente')
-const formData = new FormData(form_pedido);
-formData.append('code', cliente.value);
-formData.append('datos', JSON.stringify(data));
-const respuesta = await fetch("{{ path('app_pedir') }}", {
-method: 'POST',
-body: formData
-});
-const datos = await respuesta.json();
-window.location.href = "{{ path('app_pedido') }}";
-} catch (error) {
-console.error('Error:', error);
-}
-}
-},
-btnVerPedidos: {
-html: '<a href="  {{ path('app_pedidos') }}" class="btn btn-danger">ver pedidos</a>'
-},
-btnHacerPedido: {
-html: '<a  class="btn btn-warning">hacer pedido</a>'
-},
-btnGastos: {
-html: '<a href="                 {{ path('app_gasto') }}" class="btn btn-danger">Caja</a>'
-},
-btnInventario: {
-html: '<a href="                 {{ path('app_inventario') }}" class="btn btn-danger">inventario</a>'
-},
-btnInforme: {
-html: '<a href="                 {{ path('app_informes') }}" class="btn btn-danger">informe</a>'
-}
-}
-}
-	</script>
+        function buttons() {
+            return {
+                btnPedir: {
+                    html: '<button class="btn btn-primary" name="btnPedir">PEDIR</button>',
+                    event: async () => {
+                        const form_pedido = document.querySelector('#form_pedido');
+                        try {
+                            const data = $table.bootstrapTable('getData');
+                            if (!data.length) {
+                                return false
+                            }
+                            const cliente = document.querySelector('#cliente')
+                            const formData = new FormData(form_pedido);
+                            formData.append('code', cliente.value);
+                            formData.append('datos', JSON.stringify(data));
+                            const respuesta = await fetch("{{ path('app_pedir') }}", {
+                                method: 'POST',
+                                body: formData
+                            });
+                            const datos = await respuesta.json();
+                            window.location.href = "{{ path('app_pedido') }}";
+                        } catch (error) {
+                            console.error('Error:', error);
+                        }
+                    }
+                },
+                btnVerPedidos: {
+                    html: '<a href="  {{ path('app_pedidos') }}" class="btn btn-danger">ver pedidos</a>'
+                },
+                btnHacerPedido: {
+                    html: '<a  class="btn btn-warning">hacer pedido</a>'
+                },
+                btnGastos: {
+                    html: '<a href="                 {{ path('app_gasto') }}" class="btn btn-danger">Caja</a>'
+                },
+                btnInventario: {
+                    html: '<a href="                 {{ path('app_inventario') }}" class="btn btn-danger">inventario</a>'
+                },
+                btnInforme: {
+                    html: '<a href="                 {{ path('app_informes') }}" class="btn btn-danger">informe</a>'
+                }
+            }
+        }
+    </script>
 {% endblock %}

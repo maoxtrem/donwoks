@@ -16,6 +16,9 @@ class GrupoProducto
     #[ORM\Column(length: 255)]
     private ?string $nombre = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $orden = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +32,18 @@ class GrupoProducto
     public function setNombre(string $nombre): static
     {
         $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    public function getOrden(): ?int
+    {
+        return $this->orden;
+    }
+
+    public function setOrden(?int $orden): static
+    {
+        $this->orden = $orden;
 
         return $this;
     }

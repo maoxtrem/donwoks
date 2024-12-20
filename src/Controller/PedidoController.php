@@ -49,7 +49,7 @@ class PedidoController extends AbstractController
         }
 
         $productos = $productoRepository->findBy([], ['grupo' => 'ASC']);
-        $grupos = $grupoProductoRepository->findBy([]);
+        $grupos = $grupoProductoRepository->findBy([], ['orden' => 'ASC']);
         return $this->render('pedido/index.html.twig', ['productos' => $productos, 'grupos' => $grupos, 'cliente' => [
             'code' => $code,
             'puntos' => $puntos
@@ -194,7 +194,7 @@ class PedidoController extends AbstractController
         $pedido->setPrecio($total);
         $pedido->setUtilidad($utilidad);
         $pedidoRepository->guardar($pedido);
-        $this->ratchetClient->send('nuevo pedido');
+       $this->ratchetClient->send('nuevo pedido');
         return new JsonResponse();
     }
 }

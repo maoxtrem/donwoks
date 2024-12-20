@@ -1,3 +1,5 @@
 #!/bin/bash
 
-symfony server:start --port=80
+sudo service apache2 start
+
+sh websocket.sh
