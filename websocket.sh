@@ -1,3 +1,3 @@
 #!/bin/bash
 
-php bin/console websocket:server
+php bin/console websocket:server &

@@ -2,4 +2,4 @@
 
 sudo service apache2 start
 
-sh websocket.sh
+sh websocket.sh &
