@@ -57,13 +57,12 @@ class GastoRepository extends ServiceEntityRepository
                 '0 abono'
 
             )
-           // ->andWhere('p.detalle = :nequi')
+           #->andWhere('p.detalle = :nequi')->setParameter('nequi', 'nequi')
             ->andWhere('p.precio != 0')
             ->andWhere('p.cancelado = 0')
             ;
       
-        $movimiento && $SQL->andWhere('p.tipomovimiento = :movimiento')
-          //->setParameter('nequi', 'nequi')
+        $movimiento && $SQL->andWhere('p.tipomovimiento = :movimiento')      
             ->setParameter('movimiento', $movimiento);
           
         return $SQL->getQuery()

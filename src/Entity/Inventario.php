@@ -35,6 +35,9 @@ class Inventario
     #[ORM\Column]
     private ?int $costo = 0;
 
+    #[ORM\Column]
+    private ?int $estado = 0;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +123,19 @@ class Inventario
     public function setCosto(int $costo): static
     {
         $this->costo = $costo;
+
+        return $this;
+    }
+
+    public function getEstado(): ?int
+    {
+        return $this->estado;
+    }
+
+
+    public function setEstado(int $estado): static
+    {
+        $this->estado = $estado;
 
         return $this;
     }

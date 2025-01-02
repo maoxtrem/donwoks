@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class MovimientosInventarioRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private \DateTime $hoy = new \DateTime())
     {
         parent::__construct($registry, MovimientosInventario::class);
     }
@@ -33,6 +33,8 @@ class MovimientosInventarioRepository extends ServiceEntityRepository
                 "SUM(CASE WHEN p.tipomovimiento = 'entrada' THEN p.cantidad ELSE 0 END) AS cantidad_entrada",
                 "SUM(CASE WHEN p.tipomovimiento = 'salida' THEN p.cantidad ELSE 0 END) AS cantidad_salida"
             )
+            ->andWhere("DATE_FORMAT(p.fechacreate, '%Y-%m') = :fecha")
+            ->setParameter('fecha', $this->hoy->format('Y-m'))
             ->groupBy('p.nombre, p.medida');
 
         return $SQL->getQuery()
