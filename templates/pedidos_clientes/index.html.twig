@@ -4,23 +4,141 @@
 {% endblock %}
 
 {% block body %}
+<style>
+.diseño {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fila {
+  display: flex;
+}
+
+.fila div{
+
+   margin: 1px;
+      border-radius: 5px;
+}
+
+.celda {
+  background-color: #000;
+}
+
+.espacio {
+   background-color: #fff;
+}
+</style>
 	<div class="container pt-5">
-<div class="row">
-  <div class="col-sm-3 mb-3">
-  <a href="#" class="text-decoration-none">
-    <div class="card text-bg-primary">
-      <div class="card-body">
-        <h5 class="card-title fs-2 ">Special title treatmentddd</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-
-      </div>
-    </div>
-	</a>
-  </div>
-
+ 
+<div class="diseño" id="diseño"> 
+<button id="play" class="btn btn-success mb-1">play</button>
 </div>
+
 	</div>
 	<script>
+const play = document.getElementById('play');
+const diseño = document.getElementById('diseño');
+const numCubos = 25; // Número de cubos que deseas crear
+const timeRulet = 100;
+const numFilas = Math.ceil(Math.sqrt(numCubos));
+const celdas =  numFilas*4-4;// Número de filas necesarias para crear el diseño
+let idCelda = 1; // ID inicial para los cubos de clase "celda"
+let fixCelda = celdas;
+for (let i = 0; i < numFilas; i++) {
+  const fila = document.createElement('div');
+  fila.className = 'fila';
+
+  for (let j = 0; j < numFilas; j++) {
+  
+    const card = document.createElement('div');
+    const cardBody = document.createElement('div');
+    const cardTitle = document.createElement('h5');
+    const cardText = document.createElement('p');
+    card.className = 'card text-bg-light';
+    cardBody.className = 'card-body';
+    cardTitle.className = 'card-title';
+    cardText.className = 'card-text';
+
+
+
+// Agregar los elementos a la tarjeta
+
+    if (i === 0 || i === numFilas - 1 || j === 0 || j === numFilas - 1) {
+     
+     if(j === numFilas - 1 && i < numFilas - 1 && i>0 || i===0){
+      card.id = 'celda_' + idCelda; // Agrega un ID consecutivo a cada cubo de clase "celda"
+      idCelda++;
+    } else{
+      card.id = 'celda_'+fixCelda ; // Agrega un ID consecutivo a cada cubo de clase "celda"
+      fixCelda--;
+    } 
+
+
+    } else {
+      card.style.visibility = 'hidden'   
+    }
+    cardTitle.textContent = 'Card title';
+    cardText.textContent = 'Some ';
+    cardBody.appendChild(cardTitle);
+    cardBody.appendChild(cardText);
+    card.appendChild(cardBody);
+    fila.appendChild(card);
+  }
+
+  diseño.appendChild(fila);
+}
+
+
+play.addEventListener('click', async (e) => {
+  const numeroAleatorio = Math.floor(Math.random() * celdas) + 1;
+  
+  // Crear dos funciones asíncronas para cada bucle
+  const animacion_1 = async () => {
+    for (let j = 1; j <= celdas; j++) {
+      const div = document.getElementById('celda_' + j);
+      div.classList.replace('text-bg-light', 'text-bg-dark');
+      await new Promise(resolve => setTimeout(resolve, timeRulet));
+      div.classList.replace( 'text-bg-dark','text-bg-light');
+    }
+  };
+
+    const animacion_2 = async () => {
+    for (let j = 1; j <= celdas; j++) {
+      const div = document.getElementById('celda_' + (celdas-(j-1)));
+      div.classList.replace('text-bg-light', 'text-bg-dark');
+      await new Promise(resolve => setTimeout(resolve, timeRulet));
+    div.classList.replace( 'text-bg-dark','text-bg-light');
+    }
+  };
+
+  const animacion_3 = async () => {
+    for (let j = 1; j <= celdas; j++) {
+      const numeroAleatorio = Math.floor(Math.random() * celdas) + 1;
+      const div = document.getElementById('celda_' + numeroAleatorio);
+       div.classList.replace('text-bg-light', 'text-bg-dark');
+      await new Promise(resolve => setTimeout(resolve, timeRulet));
+      div.classList.replace( 'text-bg-dark','text-bg-light');
+    }
+  };
+
+    const animacion_4 = async () => {
+    for (let j = 1; j <= celdas; j++) {
+      const numeroAleatorio = Math.floor(Math.random() * celdas) + 1;
+      const div = document.getElementById('celda_' + numeroAleatorio);
+       div.classList.replace('text-bg-light', 'text-bg-dark');
+      await new Promise(resolve => setTimeout(resolve, timeRulet));
+      div.classList.replace( 'text-bg-dark','text-bg-light');
+    }
+  };
+
+  // Ejecutar ambas funciones de manera concurrente
+  await Promise.all([animacion_1(), animacion_2(),animacion_3(),animacion_4()]);
+
+   const div = document.getElementById('celda_' + numeroAleatorio);
+   div.classList.replace('text-bg-light', 'text-bg-dark');
+});
+
 
 
 
